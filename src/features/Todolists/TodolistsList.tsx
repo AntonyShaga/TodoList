@@ -11,6 +11,7 @@ import {
     TodolistDomainType
 } from "./todolists-reducer";
 import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from '../../app/store'
 import {AppRootState} from "../../app/store";
 import {Grid, Paper} from "@mui/material";
 import {AddItemForm} from "../../components/AddItemForm/AddItemForm";
@@ -21,7 +22,7 @@ type PropsType = {
     demo?: boolean
 }
 export const TodolistsList: React.FC<PropsType> = React.memo(({demo = false}) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch()
     const todolists = useSelector<AppRootState, Array<TodolistDomainType>>(state => state.todolist)
     const tasksObj = useSelector<AppRootState, TasksStateType>(state => state.tasks)
 
