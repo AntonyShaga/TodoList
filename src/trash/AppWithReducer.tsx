@@ -69,8 +69,8 @@ function AppWithReducer() {
     let todolistId2 = v1();
 
     let [todolists, dispatchTOTdolistsReducer] = useReducer(todolistReducer, [
-        {id: todolistId1, title: "What to learn", filter: "all", order: 0, addedDate: ''},
-        {id: todolistId2, title: "What to buy", filter: "all", order: 0, addedDate: ''}
+        {id: todolistId1, title: "What to learn", filter: "all",entityStatus:'idle', order: 0, addedDate: ''},
+        {id: todolistId2, title: "What to buy", filter: "all",entityStatus:'idle', order: 0, addedDate: ''}
     ])
 
     let removeTodolist = (todolistId: string) => {
@@ -100,7 +100,7 @@ function AppWithReducer() {
                 id: v1(), title: "Milk", status: TaskStatuses.Completed, todoListId: todolistId2, description: '',
                 startDate: '', deadline: '', addedDate: '', order: 0, priority: TaskPriorities.Low
             },
-        ]
+        ],
     })
 
     function addTodolist(title: string) {

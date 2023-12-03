@@ -71,8 +71,8 @@ function App() {
     let todolistId2 = v1();
 
     let [todolists, setTodolists] = useState<Array<TodolistDomainType>>([
-        {id: todolistId1, title: "What to learn", filter: "all",addedDate:'',order:0},
-        {id: todolistId2, title: "What to buy", filter: "all",addedDate:'',order:0}
+        {id: todolistId1, title: "What to learn", filter: "all",entityStatus:'idle',addedDate:'',order:0},
+        {id: todolistId2, title: "What to buy", filter: "all",entityStatus:'idle',addedDate:'',order:0}
     ])
 
     let removeTodolist = (todolistId: string) => {
@@ -105,6 +105,7 @@ function App() {
             filter: "all",
             title: title,
             addedDate:'',
+            entityStatus:'idle',
             order: 0
         }
         setTodolists([todolist, ...todolists]);

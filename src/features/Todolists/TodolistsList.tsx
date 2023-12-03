@@ -17,12 +17,18 @@ import {AddItemForm} from "../../components/AddItemForm/AddItemForm";
 import {Todolist} from "./Todolist/Todolist";
 import {TasksStateType} from "../../app/App";
 
-export const TodolistsList: React.FC = React.memo( () => {
+type PropsType = {
+    demo?: boolean
+}
+export const TodolistsList: React.FC<PropsType> = React.memo(({demo = false}) => {
     const dispatch = useDispatch();
     const todolists = useSelector<AppRootState, Array<TodolistDomainType>>(state => state.todolist)
     const tasksObj = useSelector<AppRootState, TasksStateType>(state => state.tasks)
 
     useEffect(() => {
+        if(demo) {
+            return
+        }
         dispatch(fetchTodolistTC())
     }, [])
 
@@ -65,6 +71,7 @@ export const TodolistsList: React.FC = React.memo( () => {
         const thunk = AddTodolistTC(title)
         dispatch(thunk)
     }, [])
+    console.log(todolists)
 
     return (
         <>
@@ -92,6 +99,7 @@ export const TodolistsList: React.FC = React.memo( () => {
                                         filter={tl.filter}
                                         removeTodolist={removeTodolist}
                                         chengeTodolistTitle={chengeTodolistTitle}
+                                        demo={demo}
                                     />
                                 </Paper>
                             </Grid>
@@ -100,6 +108,5 @@ export const TodolistsList: React.FC = React.memo( () => {
                 }
             </Grid>
         </>
-
     )
 })
