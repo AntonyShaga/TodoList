@@ -1,4 +1,5 @@
 import axios, {AxiosResponse} from 'axios';
+import {number} from "prop-types";
 
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/',
@@ -14,36 +15,46 @@ export const todolistsAPI = {
         return  instance.get<Array<TodolistType>>("todo-lists")
     },
     createTodolist(title:string) {
-        return  instance.post <ResponseTYpe<{item:TodolistType}>>("todo-lists",{title: title})
+        return  instance.post <ResponseType<{item:TodolistType}>>("todo-lists",{title: title})
     },
     deleteTodolist(id:string) {
-        return  instance.delete <ResponseTYpe>(`todo-lists/${id}`)
+        return  instance.delete <ResponseType>(`todo-lists/${id}`)
     },
     updateTodolist(id:string,title:string) {
-        return  instance.put <ResponseTYpe>(`todo-lists/${id}`,{title: title})
+        return  instance.put <ResponseType>(`todo-lists/${id}`,{title: title})
     },
     getTasks(todolistId:string) {
         return  instance.get<GetTaskResponse>(`todo-lists/${todolistId}/tasks`)
     },
     deleteTask(todolistId:string, taskId:string) {
-        return  instance.delete<ResponseTYpe>(`todo-lists/${todolistId}/tasks/${taskId}`)
+        return  instance.delete<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`)
     },
     updateTask(todolistId:string,taskId:string,model:UpdateTaskType) {
-        return instance.put<ResponseTYpe<{ item: TaskType }>, AxiosResponse<ResponseTYpe<{ item: TaskType }>>, UpdateTaskType>(`todo-lists/${todolistId}/tasks/${taskId}`, model);
+        return instance.put<ResponseType<{ item: TaskType }>, AxiosResponse<ResponseType<{ item: TaskType }>>, UpdateTaskType>(`todo-lists/${todolistId}/tasks/${taskId}`, model);
     },
     createTask(todolistId:string,taskTitle:string) {
-        return  instance.post<ResponseTYpe<{item :TaskType} >> (`todo-lists/${todolistId}/tasks`,{title: taskTitle})
+        return  instance.post<ResponseType<{item :TaskType} >> (`todo-lists/${todolistId}/tasks`,{title: taskTitle})
     }
 }
-
+export const authAPI = {
+    login(data:LoginParamsType) {
+       return  instance.post <ResponseType<{ userId?: number }>>("auth/login",data)
+    }
+}
 //types
+export type LoginParamsType = {
+    email:string
+    password:string
+    rememberMe: boolean
+    captcha?: string
+}
 export type TodolistType = {
     id: string
     title: string
     addedDate: string
     order: number
 }
-export type ResponseTYpe <D = {}> = {
+export type ResponseType<D = {}> = {
     resultCode:number
     messages:Array<string>
     data: D

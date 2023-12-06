@@ -1,6 +1,6 @@
 import React from "react";
-import App from "./App";
 import {ReduxStoreProviderDecoration} from "../stories/ReduxStoreProviderDecoration";
+import App from "./App";
 
 export default {
     title:'App Component',

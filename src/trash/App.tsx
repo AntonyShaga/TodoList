@@ -148,15 +148,13 @@ function App() {
                                     <Paper style={{padding:"10px"}}>
                                         <Todolist
                                             key={tl.id}
-                                            id={tl.id}
-                                            title={tl.title}
+                                            todolist={tl}
                                             tasks={tasksForTodoList}
                                             removeTask={removeTask}
                                             changeFilter={changeFilter}
                                             chengeStatus={chengeStatus}
                                             chengeTaskTitle={chengeTaskTitle}
                                             addTask={addTask}
-                                            filter={tl.filter}
                                             removeTodolist={removeTodolist}
                                             chengeTodolistTitle={chengeTodolistTitle}
                                         />
