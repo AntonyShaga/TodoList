@@ -37,7 +37,8 @@ const initialGlobalState:AppRootState = {
     },
     app:{
         error:null,
-        status:"idle"
+        status:"idle",
+        isInitialized:false
     },
     auth:{
         isLoggedIn: false

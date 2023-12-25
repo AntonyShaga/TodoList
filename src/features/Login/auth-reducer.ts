@@ -6,7 +6,6 @@ import {handleServerAppError, handleServerNetworkError} from "../../utils/error-
 const initialState = {
     isLoggedIn: false
 }
-type InitialStateType = typeof initialState
 
 export const authReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
     switch (action.type) {
@@ -23,7 +22,7 @@ export const setIsLoggedInAC = (value:boolean) =>
     ({type:'login/SET-IS-LOGGED-IN', value} as const)
 
 //thunsk
-export const loginTC = (data:LoginParamsType) => (dispatch: Dispatch<ActionsType>) : any => {
+export const loginTC = (data:LoginParamsType) => (dispatch: ThunkDispatch) => {
     dispatch(setAppStatusAC('loading'))
     authAPI.login(data)
         .then(res => {
@@ -42,5 +41,8 @@ export const loginTC = (data:LoginParamsType) => (dispatch: Dispatch<ActionsType
 }
 
 //types
-
-type ActionsType = ReturnType<typeof setIsLoggedInAC> | SetAppStatusActionType | SetAppErrorActionType
+type InitialStateType = {
+    isLoggedIn: boolean
+}
+type ActionsType = ReturnType<typeof setIsLoggedInAC>
+type ThunkDispatch = Dispatch<ActionsType | SetAppStatusActionType | SetAppErrorActionType>
