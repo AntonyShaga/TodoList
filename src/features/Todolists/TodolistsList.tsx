@@ -27,7 +27,7 @@ export const TodolistsList: React.FC<PropsType> = React.memo(({demo = false}) =>
     const todolists = useSelector<AppRootState, Array<TodolistDomainType>>(state => state.todolist)
     const tasksObj = useSelector<AppRootState, TasksStateType>(state => state.tasks)
     const isLoggedIn = useSelector<AppRootState, boolean>((state) => state.auth.isLoggedIn)
-
+    debugger
     useEffect(() => {
         if(demo || !isLoggedIn ) {
             return
