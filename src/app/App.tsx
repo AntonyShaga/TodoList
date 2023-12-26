@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import './App.css';
 import {
     AppBar,
@@ -19,6 +19,7 @@ import {AppRootState, useAppDispatch} from "./store";
 import {initialazedTC, RequestStatusType} from "./app-reducer";
 import {Login} from "../features/Login/Login";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
+import {logoutTC} from "../features/Login/auth-reducer";
 
 export type TasksStateType = {
     [key: string]: Array<TaskType>
@@ -32,11 +33,16 @@ function App({demo = false}: PropsType) {
 
     const status = useSelector<AppRootState, RequestStatusType>((state) => state.app.status)
     const isInitialized = useSelector<AppRootState, boolean>((state) => state.app.isInitialized)
+    const isLoggedIn = useSelector<AppRootState,boolean>(state => state.auth.isLoggedIn)
     const dispatch = useAppDispatch()
+
+    const logoutHandler = useCallback(()=>{
+        dispatch(logoutTC())
+    },[])
 
     useEffect(()=>{
         dispatch(initialazedTC())
-    })
+    },[])
     if (!isInitialized) {
         return <CircularProgress  sx={{
             color: (theme) => (theme.palette.mode === 'light' ? '#1a90ff' : '#308fe8'),
@@ -48,7 +54,10 @@ function App({demo = false}: PropsType) {
           size={100}
         />
     }
-    return (
+
+
+
+        return (
         <BrowserRouter>
             <div className="App">
                 <CustomizedSnackbars/>
@@ -60,7 +69,7 @@ function App({demo = false}: PropsType) {
                         <Typography variant={"h6"}>
                             News
                         </Typography>
-                        <Button color={"inherit"}>Login</Button>
+                        {isLoggedIn && <Button color={"inherit"} onClick={logoutHandler}>Log out</Button>}
                     </Toolbar>
                     {status === 'loading' && <LinearProgress/>}
                 </AppBar>

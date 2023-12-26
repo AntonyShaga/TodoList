@@ -29,7 +29,7 @@ export const TodolistsList: React.FC<PropsType> = React.memo(({demo = false}) =>
     const isLoggedIn = useSelector<AppRootState, boolean>((state) => state.auth.isLoggedIn)
 
     useEffect(() => {
-        if(demo || !isLoggedIn) {
+        if(demo || !isLoggedIn ) {
             return
         }
         dispatch(fetchTodolistTC())
@@ -75,7 +75,7 @@ export const TodolistsList: React.FC<PropsType> = React.memo(({demo = false}) =>
         dispatch(thunk)
     }, [])
 
-    if(isLoggedIn) {
+    if(!isLoggedIn) {
         return <Navigate  to={"/Login"}/>
     }
 

@@ -1,5 +1,4 @@
 import axios, {AxiosResponse} from 'axios';
-import {number} from "prop-types";
 
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/',
@@ -39,6 +38,9 @@ export const todolistsAPI = {
 export const authAPI = {
     login(data:LoginParamsType) {
        return  instance.post <ResponseType<{ userId?: number }>>("auth/login",data)
+    },
+    logout(){
+        return  instance.delete <ResponseType<{ userId?: number }>>("auth/login")
     },
     me() {
         return  instance.get <ResponseType<{ id: number,email:string, login:string }>>("auth/me")
