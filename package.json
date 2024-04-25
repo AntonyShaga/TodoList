@@ -1,6 +1,6 @@
 {
   "name": "it-incubator-todolist-ts",
-  "homepage": "https://AntonyShaga.github.io/TodoList/",
+  "homepage": "https://AntonyShaga.github.io/",
   "jest": {
     "moduleNameMapper": {
       "axios": "axios/dist/node/axios.cjs"
@@ -58,6 +58,7 @@
     ]
   },
   "devDependencies": {
+    "gh-pages": "^6.1.1",
     "prettier": "^3.1.1"
   }
 }
