@@ -1,30 +1,29 @@
 import React, {memo, useCallback, useEffect} from 'react';
-import {TodolistType} from './App';
-import {AddItemForm} from './AddItemForm';
-import {EditableSpan} from './EditableSpan';
+import {AddItemForm} from './components/AddItemForm/AddItemForm';
+import {EditableSpan} from './components/EditableSpan/EditableSpan';
 import IconButton from "@mui/material/IconButton/IconButton";
 import {Delete} from "@mui/icons-material";
-import {useAppDispatch, useAppSellector} from "./state/store";
+import {useAppDispatch, useAppSellector} from "./app/store";
 import {addTaskTC, getTasksTC} from "./state/tasks-reducer";
 import {
     changeTodolistFilterAC,
-    changeTodolistTitleAC, changeTodolistTitleTC,
-    removeTodolistAC,
-    removeTodolistsTC
+    changeTodolistTitleTC,
+    removeTodolistsTC,
+    TodolistDomainType
 } from "./state/todolists-reducer";
 import {ButtonMemo} from "./ButtonMemo";
 import {TaskWithRedux} from "./TaskWithRedux";
 import {TaskStatuses, TaskTypeAPI} from "./api/todolist-api";
 
 
-export type TaskType = {
+/*export type TaskType = {
     id: string
     title: string
     isDone: boolean
-}
+}*/
 
 type PropsType = {
-   todolist:TodolistType
+   todolist:TodolistDomainType
 }
 
 export const TodolistWithRedux = memo(({todolist}: PropsType) => {

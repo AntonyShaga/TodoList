@@ -1,14 +1,7 @@
 import type {Meta, StoryObj} from '@storybook/react';
 import {action} from '@storybook/addon-actions'
-import {AddItemForm, AddItemFormPropsType} from "../AddItemForm";
-import React, {ChangeEvent, FC, KeyboardEvent, memo, useState} from "react";
-import TextField from "@mui/material/TextField/TextField";
-import IconButton from "@mui/material/IconButton/IconButton";
-import {AddBox, Delete} from "@mui/icons-material";
-import {Task, TaskPropsType} from "../Task";
-import {Checkbox} from "@mui/material";
-import {EditableSpan} from "../EditableSpan";
-import {TaskType} from "../TodolistWithRedux";
+import React, {useState} from "react";
+import {Task} from "../Task";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta: Meta<typeof Task> = {

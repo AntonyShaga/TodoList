@@ -1,9 +1,10 @@
 import React, {ChangeEvent, FC, memo} from 'react';
 import {Checkbox} from "@mui/material";
-import {EditableSpan} from "./EditableSpan";
+import {EditableSpan} from "./components/EditableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton/IconButton";
 import {Delete} from "@mui/icons-material";
-import {TaskType} from "./TodolistWithRedux";
+import {} from "./TodolistWithRedux";
+import {TaskType} from "./Todolist";
 
 export type TaskPropsType = {
     task: TaskType
