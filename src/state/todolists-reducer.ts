@@ -1,13 +1,14 @@
 import {TodolistType} from '../app/App';
 import {todolistAPI, TodolistTypeAPI} from '../api/todolist-api'
 import {Dispatch} from "redux";
-import {RequestStatusType, SetAppErrorActionType, setStatusAC, SetStatusType} from "../app/app-reducer";
+import {RequestStatusType, setAppErrorAC, SetAppErrorActionType, setStatusAC, SetStatusType} from "../app/app-reducer";
 
 export type RemoveTodolistActionType = ReturnType<typeof removeTodolistAC>
 export type AddTodolistActionType = ReturnType<typeof addTodolistAC>
 export type ChangeTodolistTitleActionType = ReturnType<typeof changeTodolistTitleAC>
 export type ChangeTodolistFilterActionType = ReturnType<typeof changeTodolistFilterAC>
 export type SetTodosType = ReturnType<typeof setTodoListAC>
+export type setEntityStatusType = ReturnType<typeof setEntityStatusAC>
 
 type ActionsType =
     RemoveTodolistActionType
@@ -17,6 +18,7 @@ type ActionsType =
     | SetTodosType
     | SetStatusType
     | SetAppErrorActionType
+    | setEntityStatusType
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
 export type TodolistDomainType = TodolistTypeAPI & {
@@ -26,12 +28,14 @@ export type TodolistDomainType = TodolistTypeAPI & {
 type ThunkDispatch = Dispatch<ActionsType | SetStatusType>
 
 const initialeState: Array<TodolistDomainType> = []
-export const todolistsReducer = (state:Array<TodolistDomainType> = initialeState, action: ActionsType):Array<TodolistDomainType> => {
+export const todolistsReducer = (state: Array<TodolistDomainType> = initialeState, action: ActionsType): Array<TodolistDomainType> => {
     switch (action.type) {
         case 'REMOVE-TODOLIST':
             return state.filter(tl => tl.id !== action.id)
         case 'ADD-TODOLIST':
-            return [{...action.todolist, filter: "all",entityStatus: 'idle'}, ...state]
+            return [{...action.todolist, filter: "all", entityStatus: 'idle'}, ...state]
+        case 'SET-ENTITY-STATUS':
+            return state.map(el => el.id === action.todolistId ?{...el, entityStatus: action.entityStatus}:el)
         case 'CHANGE-TODOLIST-TITLE': {
             return state.map(el => el.id === action.id ? {...el, title: action.title} : el)
         }
@@ -39,7 +43,7 @@ export const todolistsReducer = (state:Array<TodolistDomainType> = initialeState
             return state.map(el => el.id === action.id ? {...el, filter: action.filter} : el)
         }
         case "SET-TODOS" : {
-            return action.todos.map(el => ({...el, filter: 'all',entityStatus: 'idle'}))
+            return action.todos.map(el => ({...el, filter: 'all', entityStatus: 'idle'}))
         }
         default:
             return state
@@ -51,6 +55,9 @@ export const removeTodolistAC = (todolistId: string) => {
 }
 export const addTodolistAC = (todolist: TodolistTypeAPI) => {
     return {type: 'ADD-TODOLIST', todolist} as const
+}
+export const setEntityStatusAC = (todolistId: string,entityStatus:RequestStatusType) => {
+    return {type: 'SET-ENTITY-STATUS', todolistId,entityStatus} as const
 }
 export const changeTodolistTitleAC = (todolistId: string, title: string) => {
     return {type: 'CHANGE-TODOLIST-TITLE', title: title, id: todolistId} as const
@@ -65,11 +72,16 @@ export const setTodolistsTC = () => (dispatch: Dispatch) => {
         dispatch(setStatusAC('succeeded'))
     })
 }
-export const removeTodolistsTC = (title: string) => (dispatch: ThunkDispatch) => {
+export const removeTodolistsTC = (todolistId: string) => (dispatch: ThunkDispatch) => {
     dispatch(setStatusAC('loading'))
-    todolistAPI.deleteTodolist(title).then((res) => {
-        dispatch(removeTodolistAC(title))
+    dispatch(setEntityStatusAC(todolistId,'loading'))
+    todolistAPI.deleteTodolist(todolistId).then((res) => {
+        dispatch(removeTodolistAC(todolistId))
         dispatch(setStatusAC('succeeded'))
+    }).catch((e)=> {
+        dispatch(setAppErrorAC(e.message))
+        dispatch(setEntityStatusAC(todolistId,'idle'))
+        dispatch(setStatusAC('failed'))
     })
 }
 export const addTodolistsTC = (title: string) => (dispatch: ThunkDispatch) => {

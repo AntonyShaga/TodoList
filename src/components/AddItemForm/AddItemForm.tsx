@@ -2,14 +2,18 @@ import IconButton from '@mui/material/IconButton/IconButton';
 import TextField from '@mui/material/TextField/TextField';
 import React, {ChangeEvent, FC, KeyboardEvent, memo, useState} from 'react';
 import {AddBox} from "@mui/icons-material";
+import {RequestStatusType} from "../../app/app-reducer";
 
 export type AddItemFormPropsType = {
     addItem: (title: string) => void
+    disabled?:boolean
+
 }
 
 export const AddItemForm:FC<AddItemFormPropsType> = memo((
     {
-        addItem
+        addItem,
+        disabled
     }
 ) => {
 
@@ -44,8 +48,9 @@ export const AddItemForm:FC<AddItemFormPropsType> = memo((
                    onKeyPress={onKeyPressHandler}
                    label="Title"
                    helperText={error}
+                   disabled={disabled}
         />
-        <IconButton color="primary" onClick={addItemHandler}>
+        <IconButton color="primary" onClick={addItemHandler} disabled={disabled}>
             <AddBox />
         </IconButton>
     </div>

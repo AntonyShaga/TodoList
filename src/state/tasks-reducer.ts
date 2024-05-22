@@ -4,6 +4,7 @@ import {Dispatch} from "redux";
 import {TasksStateType} from "../app/AppWithRedux";
 import {AppRootStateType} from "../app/store";
 import {setAppErrorAC, SetAppErrorActionType, setStatusAC, SetStatusType} from "../app/app-reducer";
+import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
 
 export type RemoveTaskActionType = ReturnType<typeof removeTaskAC>
 export type AddTaskActionType = ReturnType<typeof addTaskAC>
@@ -115,7 +116,10 @@ export const removeTaskTC = (todolistId: string, taskId: string) => (dispatch: T
         .then((res) => {
             dispatch(removeTaskAC(todolistId, taskId))
             dispatch(setStatusAC('succeeded'))
-        })
+        }) .catch((e)=> {
+        dispatch(setAppErrorAC(e.message))
+        dispatch(setStatusAC('failed'))
+    })
 }
 export const addTaskTC = (todolistId: string, title: string) => (dispatch: ThunkDispatch) => {
     dispatch(setStatusAC('loading'))
@@ -125,14 +129,12 @@ export const addTaskTC = (todolistId: string, title: string) => (dispatch: Thunk
                 dispatch(addTaskAC(res.data.data.item))
                 dispatch(setStatusAC('succeeded'))
             } else {
-                if (res.data.messages.length) {
-                    dispatch(setAppErrorAC(res.data.messages[0]))
-                } else {
-                    dispatch(setAppErrorAC('ERROR'))
-                }
+                handleServerAppError<{item:TaskTypeAPI}>(dispatch,res.data)
             }
-            dispatch(setStatusAC('failed'))
-        })
+
+        }).catch((e)=> {
+        handleServerNetworkError(dispatch,e)
+    })
 }
 export const updateTaskStatusTC = (todolistId: string, taskId: string, status: TaskStatuses) => (dispatch: ThunkDispatch, getState: () => AppRootStateType) => {
     dispatch(setStatusAC('loading'))
@@ -148,6 +150,8 @@ export const updateTaskStatusTC = (todolistId: string, taskId: string, status: T
             .then((res) => {
                 dispatch(changeTaskStatusAC(taskId, status, todolistId))
                 dispatch(setStatusAC('succeeded'))
-            })
+            }).catch((e)=> {
+            handleServerNetworkError(dispatch,e)
+        })
     }
 }

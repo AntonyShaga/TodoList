@@ -28,7 +28,7 @@ type PropsType = {
 
 export const TodolistWithRedux = memo(({todolist}: PropsType) => {
 
-    const {id,filter,title} = todolist
+    const {id,filter,title,entityStatus} = todolist
 
     let tasks  = useAppSellector<TaskTypeAPI[]>(state => state.tasks[id])
 
@@ -61,15 +61,15 @@ export const TodolistWithRedux = memo(({todolist}: PropsType) => {
 
     return <div>
         <h3> <EditableSpan value={title} onChange={changeTodolistTitle} />
-            <IconButton onClick={removeTodolist}>
+            <IconButton onClick={removeTodolist} disabled={entityStatus === 'loading'}>
                 <Delete />
             </IconButton>
         </h3>
-        <AddItemForm addItem={addTask}/>
+        <AddItemForm disabled={entityStatus=='loading'} addItem={addTask}/>
         <div>
             {
                 tasks.map(t => {
-                    return <TaskWithRedux key={t.id} task={t} todolistID={id}/>
+                    return <TaskWithRedux key={t.id}  task={t} todolistID={id}/>
                 })
             }
         </div>
