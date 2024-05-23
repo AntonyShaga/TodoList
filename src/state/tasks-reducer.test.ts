@@ -1,7 +1,7 @@
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from './tasks-reducer';
+import {addTaskAC, updateTaskAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from './tasks-reducer';
 import {addTodolistAC, removeTodolistAC} from './todolists-reducer';
 import {TaskPriorities, TaskStatuses, TodolistTypeAPI} from "../api/todolist-api";
-import {TasksStateType} from "../app/AppWithRedux";
+import {TasksStateType} from "../app/App";
 
 let startState: TasksStateType = {};
 beforeEach(() => {
@@ -58,7 +58,19 @@ test('correct task should be added to correct array', () => {
     expect(endState["todolistId2"][0].status).toBe(0);
 });
 test('status of specified task should be changed', () => {
-    const action = changeTaskStatusAC("2", 2, "todolistId2");
+    const task = {
+        description: '',
+        title: 'juce',
+        status: 0,
+        priority: 0,
+        startDate: '',
+        deadline: '',
+        id:"1" ,
+        todoListId: "todolistId2",
+        order: 0,
+        addedDate: '',
+    }
+    const action = updateTaskAC("2", task, "todolistId2");
 
     const endState = tasksReducer(startState, action)
 

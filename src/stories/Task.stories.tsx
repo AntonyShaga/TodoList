@@ -1,7 +1,8 @@
 import type {Meta, StoryObj} from '@storybook/react';
 import {action} from '@storybook/addon-actions'
 import React, {useState} from "react";
-import {Task} from "../Task";
+import {Task} from "../features/TodolistsList/Todolist/Task/Task";
+
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta: Meta<typeof Task> = {
@@ -17,7 +18,7 @@ const meta: Meta<typeof Task> = {
     argTypes: {
         removeTask: {
             description:'removeTask',
-            action: 'clicked'
+            action: 'clicked',
         },
         changeTaskStatus: {
             description:'changeTaskStatus',
@@ -30,7 +31,7 @@ const meta: Meta<typeof Task> = {
     },
     // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
     args: {
-        task: {id:'1',title:'StoriBoock',isDone:true},
+        task: {id:'1',title:'StoriBoock',status:0,addedDate:'', deadline:'',order:0,startDate:'',description:'',priority:0,todoListId:''},
         /*removeTask: action('removeTask'),
         changeTaskStatus: action('changeTaskStatus'),
         changeTaskTitle: action('changeTaskTitle'),*/
@@ -53,16 +54,17 @@ export const TaskIsDoneStory: Story = {
 export const TaskIsNotDoneStory: Story = {
     //old version
     args: {
-        task: {id:'1',title:'StoriBoock',isDone:false},
+        task: {id:'1',title:'StoriBoock',status:1,addedDate:'', deadline:'',order:0,startDate:'',description:'',priority:0,todoListId:''},
     },
 };
 const TaskToogle = () => {
-    const [task,setTask] = useState({id:'1',title:'StoriBoock',isDone:true})
+    const [task,setTask] = useState({id:'1',title:'StoriBoock',status:1,addedDate:'', deadline:'',order:0,startDate:'',description:'',priority:0,todoListId:''})
 
     return <Task
         task={task}
+        todoListId={''}
         removeTask={action('removeTask')}
-        changeTaskStatus={()=>setTask({...task,isDone: !task.isDone})}
+        changeTaskStatus={()=>setTask({...task,status: task.status})}
         changeTaskTitle={(__,newTitle)=>setTask({...task,title:newTitle})}/>
 }
 
