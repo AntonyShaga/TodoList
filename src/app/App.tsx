@@ -43,40 +43,6 @@ export function App() {
     useEffect(() => {
         dispatch(setTodolistsTC())
     }, [])
-    /*
-
-        const removeTask = useCallback((id: string, todolistId: string) => {
-            dispatch(removeTaskAC(id,todolistId))
-        },[])
-
-        /!*const  addTask = useCallback((title: string, todolistId: string) => {
-            dispatch(addTaskAC(title,todolistId))
-        },[dispatch])*!/
-
-        const changeStatus = useCallback((id: string, isDone: boolean, todolistId: string) => {
-            dispatch(changeTaskStatusAC(id,isDone,todolistId))
-        },[])
-
-        const changeTaskTitle = useCallback((id: string, newTitle: string, todolistId: string) => {
-            console.log(id,newTitle,todolistId)
-            dispatch(changeTaskTitleAC(id,newTitle,todolistId))
-        },[])
-
-
-        const changeFilter = useCallback((value: FilterValuesType, todolistId: string) => {
-            dispatch(changeTodolistFilterAC(todolistId,value))
-        },[])
-
-        const removeTodolist = useCallback((id: string) => {
-            const action =removeTodolistAC(id)
-            dispatch(action)
-        },[])
-
-        const changeTodolistTitle = useCallback((id: string, title: string) => {
-            dispatch(changeTodolistTitleAC(id,title))
-        },[])*/
-
-
 
     return (
         <div className="App">
