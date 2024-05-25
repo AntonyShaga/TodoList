@@ -8,13 +8,23 @@ import FormLabel from '@mui/material/FormLabel'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import {useFormik} from "formik";
+import {useAppDispatch, useAppSellector} from "../../app/store";
+import {loginTC} from "./auth-reducer";
+import {Navigate} from "react-router-dom";
 
 type FormikErrorType = {
     email?: string
     password?: string
     rememberMe?: boolean
 }
+export type LoginDataType = {
+    email: string
+    password: string
+    rememberMe: boolean
+}
 export const Login = () => {
+    const dispatch = useAppDispatch()
+    const isLoggetIn = useAppSellector((state) => state.auth.isLoggedIn)
 
     const formik = useFormik({
         initialValues: {
@@ -36,10 +46,17 @@ export const Login = () => {
             }
             return errors
         },
-        onSubmit: values => {
-            alert(JSON.stringify(values))
+        onSubmit:async (values, _) => {
+            // alert(JSON.stringify(values))
+            _.setSubmitting(true)
+            await dispatch(loginTC(values))
+            _.setSubmitting(false)
+            formik.resetForm()
         },
     })
+    if (isLoggetIn) {
+        return <Navigate to={'/'}/>
+    }
     return (
         <Grid container justifyContent={'center'}>
             <Grid item justifyContent={'center'}>
@@ -86,7 +103,7 @@ export const Login = () => {
                                 label={'Remember me'}
                                 control={<Checkbox name="rememberMe" onChange={formik.handleChange} checked={formik.values.rememberMe} />}
                             />
-                            <Button type={'submit'} variant={'contained'} color={'primary'}>
+                            <Button disabled={formik.isSubmitting} type={'submit'} variant={'contained'} color={'primary'}>
                                 Login
                             </Button>
                         </FormGroup>

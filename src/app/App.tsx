@@ -1,49 +1,50 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
-import {AddItemForm} from '../components/AddItemForm/AddItemForm';
 import LinearProgress from "@mui/material/LinearProgress";
 import AppBar from "@mui/material/AppBar";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton/IconButton";
 import Button from "@mui/material/Button";
 import {Menu} from "@mui/icons-material";
-import {addTodolistsTC, setTodolistsTC, TodolistDomainType,} from "../state/todolists-reducer";
+import {setTodolistsTC,} from "../state/todolists-reducer";
 import {useAppDispatch, useAppSellector} from "./store";
-import {Todolist} from "../features/TodolistsList/Todolist/Todolist";
 import {TaskTypeAPI} from "../api/todolist-api";
 import {RequestStatusType} from "./app-reducer";
 import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
 import {Login} from "../features/Login/Login";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {TodolistsList} from "../features/TodolistsList/TodolistsList";
-
+import {logOutTC, meTC} from "../features/Login/auth-reducer";
+import CircularProgress from "@mui/material/CircularProgress";
 
 
 export type FilterValuesType = "all" | "active" | "completed";
-export type TodolistType = {
-    id: string
-    title: string
-    filter: FilterValuesType
-}
 
 export type TasksStateType = {
     [key: string]: Array<TaskTypeAPI>
 }
 
 export function App() {
-
     const status = useAppSellector<RequestStatusType>(state => state.app.status)
+    const isInitialized = useAppSellector<boolean>(state => state.app.isInitialized)
+    const isLoggetIn = useAppSellector((state) => state.auth.isLoggedIn)
     const dispatch = useAppDispatch()
 
+    const logOut = () => {
+        dispatch(logOutTC())
+    }
 
     useEffect(() => {
-        dispatch(setTodolistsTC())
+        dispatch(meTC())
     }, [])
 
+if(!isInitialized) {
+    return <div style={{position:'fixed',top:'30%', textAlign:'center',width:'100%'}}>
+        <CircularProgress/>
+    </div>
+}
     return (
         <div className="App">
             <AppBar position="static">
@@ -54,7 +55,7 @@ export function App() {
                     <Typography variant="h6">
                         News
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    {isLoggetIn && <Button onClick={logOut} color="inherit">Log out</Button>}
                 </Toolbar>
             </AppBar>
             {
@@ -64,7 +65,7 @@ export function App() {
             <Container fixed>
                 <ErrorSnackbar/>
                 <Routes>
-                    <Route path={'TodoList/'} element={ <TodolistsList/>}/>
+                    <Route path={'/'} element={<TodolistsList/>}/>
                     <Route path={'/login'} element={<Login/>}/>
                     <Route path={'/404'} element={<h1>404 : PAGE NOT FOUND</h1>}/>
                     <Route path={'*'} element={<Navigate to={'/404'}/>}/>
