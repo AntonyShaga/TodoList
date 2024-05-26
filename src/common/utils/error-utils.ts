@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux'
-import {setAppErrorAC, SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from "../app/app-reducer";
+import {setAppErrorAC, SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from "../../app/app-reducer";
 import {ResponseType} from "../api/todolist-api"
 
 type ErrorUtilsDispatchType = Dispatch<SetAppStatusActionType | SetAppErrorActionType>

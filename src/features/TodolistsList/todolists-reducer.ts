@@ -1,6 +1,12 @@
-import {todolistAPI, TodolistTypeAPI} from '../api/todolist-api'
+import {todolistAPI, TodolistTypeAPI} from '../../common/api/todolist-api'
 import {Dispatch} from "redux";
-import {RequestStatusType, setAppErrorAC, SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from "../app/app-reducer";
+import {
+    RequestStatusType,
+    setAppErrorAC,
+    SetAppErrorActionType,
+    setAppStatusAC,
+    SetAppStatusActionType
+} from "../../app/app-reducer";
 
 export type RemoveTodolistActionType = ReturnType<typeof removeTodolistAC>
 export type AddTodolistActionType = ReturnType<typeof addTodolistAC>
@@ -8,6 +14,7 @@ export type ChangeTodolistTitleActionType = ReturnType<typeof changeTodolistTitl
 export type ChangeTodolistFilterActionType = ReturnType<typeof changeTodolistFilterAC>
 export type SetTodosType = ReturnType<typeof setTodoListAC>
 export type setEntityStatusType = ReturnType<typeof setEntityStatusAC>
+export type clearTodosDataType = ReturnType<typeof clearTodosDataAC>
 
 type ActionsType =
     RemoveTodolistActionType
@@ -18,6 +25,7 @@ type ActionsType =
     | SetAppStatusActionType
     | SetAppErrorActionType
     | setEntityStatusType
+    | clearTodosDataType
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
 export type TodolistDomainType = TodolistTypeAPI & {
@@ -34,7 +42,7 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialeStat
         case 'ADD-TODOLIST':
             return [{...action.todolist, filter: "all", entityStatus: 'idle'}, ...state]
         case 'SET-ENTITY-STATUS':
-            return state.map(el => el.id === action.todolistId ?{...el, entityStatus: action.entityStatus}:el)
+            return state.map(el => el.id === action.todolistId ? {...el, entityStatus: action.entityStatus} : el)
         case 'CHANGE-TODOLIST-TITLE': {
             return state.map(el => el.id === action.id ? {...el, title: action.title} : el)
         }
@@ -43,6 +51,9 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialeStat
         }
         case "SET-TODOS" : {
             return action.todos.map(el => ({...el, filter: 'all', entityStatus: 'idle'}))
+        }
+        case "CLEAR-DATA" : {
+            return []
         }
         default:
             return state
@@ -55,8 +66,8 @@ export const removeTodolistAC = (todolistId: string) => {
 export const addTodolistAC = (todolist: TodolistTypeAPI) => {
     return {type: 'ADD-TODOLIST', todolist} as const
 }
-export const setEntityStatusAC = (todolistId: string,entityStatus:RequestStatusType) => {
-    return {type: 'SET-ENTITY-STATUS', todolistId,entityStatus} as const
+export const setEntityStatusAC = (todolistId: string, entityStatus: RequestStatusType) => {
+    return {type: 'SET-ENTITY-STATUS', todolistId, entityStatus} as const
 }
 export const changeTodolistTitleAC = (todolistId: string, title: string) => {
     return {type: 'CHANGE-TODOLIST-TITLE', title: title, id: todolistId} as const
@@ -65,6 +76,9 @@ export const changeTodolistFilterAC = (todolistId: string, filter: FilterValuesT
     return {type: 'CHANGE-TODOLIST-FILTER', filter: filter, id: todolistId} as const
 }
 export const setTodoListAC = (todos: TodolistTypeAPI[]) => ({type: 'SET-TODOS', todos} as const)
+export const clearTodosDataAC = () => ({type: 'CLEAR-DATA'} as const)
+
+
 export const setTodolistsTC = () => (dispatch: Dispatch) => {
     todolistAPI.getTodolists().then((res) => {
         dispatch(setTodoListAC(res.data))
@@ -73,13 +87,13 @@ export const setTodolistsTC = () => (dispatch: Dispatch) => {
 }
 export const removeTodolistsTC = (todolistId: string) => (dispatch: ThunkDispatch) => {
     dispatch(setAppStatusAC('loading'))
-    dispatch(setEntityStatusAC(todolistId,'loading'))
+    dispatch(setEntityStatusAC(todolistId, 'loading'))
     todolistAPI.deleteTodolist(todolistId).then((res) => {
         dispatch(removeTodolistAC(todolistId))
         dispatch(setAppStatusAC('succeeded'))
-    }).catch((e)=> {
+    }).catch((e) => {
         dispatch(setAppErrorAC(e.message))
-        dispatch(setEntityStatusAC(todolistId,'idle'))
+        dispatch(setEntityStatusAC(todolistId, 'idle'))
         dispatch(setAppStatusAC('failed'))
     })
 }

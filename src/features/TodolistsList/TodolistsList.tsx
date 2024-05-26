@@ -4,17 +4,17 @@ import Paper from "@mui/material/Paper";
 import {Todolist} from "./Todolist/Todolist";
 import {useAppDispatch, useAppSellector} from "../../app/store";
 import {
-    addTodolistsTC,
-    changeTodolistTitleTC,
+    addTodolistsTC, changeTodolistFilterAC,
+    changeTodolistTitleTC, FilterValuesType,
     removeTodolistsTC, setTodolistsTC,
     TodolistDomainType
-} from "../../state/todolists-reducer";
-import {AddItemForm} from "../../components/AddItemForm/AddItemForm";
-import {addTaskTC, removeTaskTC, updateTaskTC} from "../../state/tasks-reducer";
-import {TaskStatuses} from "../../api/todolist-api";
+} from "./todolists-reducer";
+import {AddItemForm} from "../../common/components/AddItemForm/AddItemForm";
+import {addTaskTC, removeTaskTC, updateTaskTC} from "./tasks-reducer";
+import {TaskStatuses} from "../../common/api/todolist-api";
 import {Navigate} from "react-router-dom";
 
-export const TodolistsList:React.FC = () => {
+export const TodolistsList: React.FC = () => {
     const todolists = useAppSellector<Array<TodolistDomainType>>(state => state.todolists)
     const isLoggetIn = useAppSellector((state) => state.auth.isLoggedIn)
     const dispatch = useAppDispatch()
@@ -23,33 +23,38 @@ export const TodolistsList:React.FC = () => {
         dispatch(setTodolistsTC())
     }, [])
 
-    const addTask = useCallback((todolistId:string, title: string) => {
+    const addTask = useCallback((todolistId: string, title: string) => {
         dispatch(addTaskTC(todolistId, title))
-    }, [dispatch])
+    }, [])
 
-    const removeTask = (todolistId:string,taskId:string) => {
+    const removeTask = useCallback((todolistId: string, taskId: string) => {
         dispatch(removeTaskTC(todolistId, taskId))
-    }
+    }, [])
 
-    const changeStatus = (todolistId:string, status:TaskStatuses, taskId:string) => {
-        dispatch(updateTaskTC(todolistId, {status},taskId))
-    }
+    const changeStatus = useCallback((todolistId: string, status: TaskStatuses, taskId: string) => {
+        dispatch(updateTaskTC(todolistId, {status}, taskId))
+    }, [])
 
-    const changeTaskTitle = (todolistId:string, newTitle:string, taskId:string) => {
-        dispatch(updateTaskTC(todolistId, {title:newTitle},taskId))
-    }
+    const changeTaskTitle = useCallback((todolistId: string, newTitle: string, taskId: string) => {
+        dispatch(updateTaskTC(todolistId, {title: newTitle}, taskId))
+    }, [])
 
-
-    const removeTodolist = (todolistId:string) => {
+    const removeTodolist = useCallback((todolistId: string) => {
         dispatch(removeTodolistsTC(todolistId))
-    }
-    const changeTodolistTitle = useCallback( (todolistId:string, title: string) => {
-        dispatch(changeTodolistTitleTC(todolistId,title))
-    },[dispatch])
+    }, [])
+
+    const changeTodolistTitle = useCallback((todolistId: string, title: string) => {
+        dispatch(changeTodolistTitleTC(todolistId, title))
+    }, [])
 
     const addTodolist = useCallback((title: string) => {
         dispatch(addTodolistsTC(title))
     }, [])
+
+    const changeFilter = useCallback(function (id: string, filter: FilterValuesType) {
+        changeTodolistFilterAC(id, filter);
+    }, []);
+
     if (!isLoggetIn) {
         return <Navigate to={'/login'}/>
     }
@@ -67,6 +72,7 @@ export const TodolistsList:React.FC = () => {
                                     todolist={tl}
                                     removeTodolist={removeTodolist}
                                     changeTodolistTitle={changeTodolistTitle}
+                                    changeFilter={changeFilter}
                                     addTask={addTask}
                                     removeTask={removeTask}
                                     changeTaskStatus={changeStatus}

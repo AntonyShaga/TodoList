@@ -1,13 +1,14 @@
-import { Dispatch } from 'redux'
+import {Dispatch} from 'redux'
 import {
     SetAppErrorActionType,
     setAppIsInitializedAC,
     setAppStatusAC,
     SetAppStatusActionType
 } from "../../app/app-reducer";
-import {authAPI} from "../../api/todolist-api";
-import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
+import {authAPI} from "../../common/api/todolist-api";
+import {handleServerAppError, handleServerNetworkError} from "../../common/utils/error-utils";
 import {LoginDataType} from "./Login";
+import {clearTodosDataAC, clearTodosDataType} from "../TodolistsList/todolists-reducer";
 
 const initialState = {
     isLoggedIn: false,
@@ -20,14 +21,14 @@ export const authReducer = (
 ): InitialStateType => {
     switch (action.type) {
         case 'login/SET-IS-LOGGED-IN':
-            return { ...state, isLoggedIn: action.value }
+            return {...state, isLoggedIn: action.value}
         default:
             return state
     }
 }
 // actions
 export const setIsLoggedInAC = (value: boolean) =>
-    ({ type: 'login/SET-IS-LOGGED-IN', value }) as const
+    ({type: 'login/SET-IS-LOGGED-IN', value}) as const
 
 // thunks
 export const loginTC = (data: LoginDataType) => async (dispatch: Dispatch<ActionsType>) => {
@@ -38,11 +39,11 @@ export const loginTC = (data: LoginDataType) => async (dispatch: Dispatch<Action
             dispatch(setIsLoggedInAC(true))
             dispatch(setAppStatusAC('succeeded'))
         } else {
-            handleServerAppError(dispatch,res.data)
+            handleServerAppError(dispatch, res.data)
             dispatch(setAppStatusAC('failed'))
         }
     } catch (e) {
-        handleServerNetworkError(dispatch,(e as {message:string}))
+        handleServerNetworkError(dispatch, (e as { message: string }))
         dispatch(setAppStatusAC('failed'))
     }
 }
@@ -53,12 +54,13 @@ export const logOutTC = () => async (dispatch: Dispatch<ActionsType>) => {
         if (res.data.resultCode === 0) {
             dispatch(setIsLoggedInAC(false))
             dispatch(setAppStatusAC('succeeded'))
+            dispatch(clearTodosDataAC())
         } else {
-            handleServerAppError(dispatch,res.data)
+            handleServerAppError(dispatch, res.data)
             dispatch(setAppStatusAC('failed'))
         }
     } catch (e) {
-        handleServerNetworkError(dispatch,(e as {message:string}))
+        handleServerNetworkError(dispatch, (e as { message: string }))
         dispatch(setAppStatusAC('failed'))
     }
 }
@@ -71,14 +73,14 @@ export const meTC = () => async (dispatch: Dispatch) => {
             dispatch(setIsLoggedInAC(true))
             dispatch(setAppStatusAC('succeeded'))
         } else {
-            handleServerAppError(dispatch,res.data)
+            handleServerAppError(dispatch, res.data)
             dispatch(setAppStatusAC('failed'))
         }
     } catch (e) {
-        handleServerNetworkError(dispatch,(e as {message:string}))
+        handleServerNetworkError(dispatch, (e as { message: string }))
         dispatch(setAppStatusAC('failed'))
     } finally {
-      dispatch(setAppIsInitializedAC(true))
+        dispatch(setAppIsInitializedAC(true))
     }
 }
 // types
@@ -86,3 +88,4 @@ type ActionsType =
     | ReturnType<typeof setIsLoggedInAC>
     | SetAppStatusActionType
     | SetAppErrorActionType
+    | clearTodosDataType

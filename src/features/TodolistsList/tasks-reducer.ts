@@ -1,10 +1,9 @@
-import {AddTodolistActionType, RemoveTodolistActionType, SetTodosType} from './todolists-reducer';
-import {taskAPI, TaskPriorities, TaskStatuses, TaskTypeAPI, UpdateTaskModelType,} from "../api/todolist-api";
+import {AddTodolistActionType, clearTodosDataType, RemoveTodolistActionType, SetTodosType} from './todolists-reducer';
+import {taskAPI, TaskPriorities, TaskStatuses, TaskTypeAPI, UpdateTaskModelType,} from "../../common/api/todolist-api";
 import {Dispatch} from "redux";
-import {TasksStateType} from "../app/App";
-import {AppRootStateType} from "../app/store";
-import {setAppErrorAC, SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from "../app/app-reducer";
-import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
+import {AppRootStateType} from "../../app/store";
+import {setAppErrorAC, SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from "../../app/app-reducer";
+import {handleServerAppError, handleServerNetworkError} from "../../common/utils/error-utils";
 
 export type RemoveTaskActionType = ReturnType<typeof removeTaskAC>
 export type AddTaskActionType = ReturnType<typeof addTaskAC>
@@ -23,6 +22,7 @@ type ActionsType =
     | SetTasksActionType
     | SetAppStatusActionType
     | SetAppErrorActionType
+    | clearTodosDataType
 
 export type UpdateDomainTaskModelType = {
     title?: string
@@ -34,6 +34,10 @@ export type UpdateDomainTaskModelType = {
 }
 
 type ThunkDispatch = Dispatch<ActionsType | SetAppStatusActionType | SetAppErrorActionType>
+
+export type TasksStateType = {
+    [key: string]: Array<TaskTypeAPI>
+}
 
 const initialeState: TasksStateType = {}
 export const tasksReducer = (state = initialeState, action: ActionsType): TasksStateType => {
@@ -61,7 +65,7 @@ export const tasksReducer = (state = initialeState, action: ActionsType): TasksS
             return {
                 ...state,
                 [action.todolistId]: state[action.todolistId].map(el => el.id === action.taskId
-                    ? {...el,...action.model} : el)
+                    ? {...el, ...action.model} : el)
             }
         }
         case 'CHANGE-TASK-TITLE': {
@@ -80,6 +84,9 @@ export const tasksReducer = (state = initialeState, action: ActionsType): TasksS
             const stateCopy = {...state};
             delete stateCopy[action.id]
             return stateCopy;
+        }
+        case "CLEAR-DATA" : {
+            return {}
         }
         default:
             return state
@@ -123,7 +130,7 @@ export const removeTaskTC = (todolistId: string, taskId: string) => (dispatch: T
         .then((res) => {
             dispatch(removeTaskAC(todolistId, taskId))
             dispatch(setAppStatusAC('succeeded'))
-        }) .catch((e)=> {
+        }).catch((e) => {
         dispatch(setAppErrorAC(e.message))
         dispatch(setAppStatusAC('failed'))
     })
@@ -136,11 +143,11 @@ export const addTaskTC = (todolistId: string, title: string) => (dispatch: Thunk
                 dispatch(addTaskAC(res.data.data.item))
                 dispatch(setAppStatusAC('succeeded'))
             } else {
-                handleServerAppError<{item:TaskTypeAPI}>(dispatch,res.data)
+                handleServerAppError<{ item: TaskTypeAPI }>(dispatch, res.data)
             }
 
-        }).catch((e)=> {
-        handleServerNetworkError(dispatch,e)
+        }).catch((e) => {
+        handleServerNetworkError(dispatch, e)
     })
 }
 export const updateTaskTC = (todolistId: string, domainModel: UpdateDomainTaskModelType, taskId: string) => (dispatch: ThunkDispatch, getState: () => AppRootStateType) => {
@@ -161,8 +168,8 @@ export const updateTaskTC = (todolistId: string, domainModel: UpdateDomainTaskMo
             .then((res) => {
                 dispatch(updateTaskAC(taskId, domainModel, todolistId))
                 dispatch(setAppStatusAC('succeeded'))
-            }).catch((e)=> {
-            handleServerNetworkError(dispatch,e)
+            }).catch((e) => {
+            handleServerNetworkError(dispatch, e)
         })
     }
 }
