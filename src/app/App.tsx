@@ -65,10 +65,10 @@ if(!isInitialized) {
             <Container fixed>
                 <ErrorSnackbar/>
                 <Routes>
-                    <Route path={'TodoList/'} element={<TodolistsList/>}/>
-                    <Route path={'https://antonyshaga.github.io/TodoList/login'} element={<Login/>}/>
+                    <Route path={'/'} element={<TodolistsList/>}/>
+                    <Route path={'/login'} element={<Login/>}/>
                     <Route path={'/404'} element={<h1>404 : PAGE NOT FOUND</h1>}/>
-                    <Route path={'*'} element={<Navigate to={'PAGE NOT FOUND'}/>}/>
+                    <Route path={'*'} element={<Navigate to={'/404'}/>}/>
                 </Routes>
             </Container>
         </div>
