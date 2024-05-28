@@ -8,7 +8,7 @@ test("ids should be equals", () => {
   const startTodolistsState: Array<TodolistDomainType> = [];
   const tolist: TodolistTypeAPI = {
     id: "todolistId1",
-    addedDate: new Date(),
+    addedDate: "",
     order: 0,
     title: "New Todolist",
   };

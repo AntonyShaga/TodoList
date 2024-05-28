@@ -1,13 +1,6 @@
-import {
-  addTaskAC,
-  updateTaskAC,
-  changeTaskTitleAC,
-  removeTaskAC,
-  tasksReducer,
-  TasksStateType,
-} from "./tasks-reducer";
+import { tasksActions, tasksReducer, TasksStateType } from "./tasks-reducer";
 import { todolistsAction } from "./todolists-reducer";
-import { TaskPriorities, TaskStatuses, TodolistTypeAPI } from "common/api/todolist-api";
+import { TaskPriorities, TaskStatuses } from "common/api/todolist-api";
 
 let startState: TasksStateType = {};
 beforeEach(() => {
@@ -92,7 +85,7 @@ beforeEach(() => {
 });
 
 test("correct task should be deleted from correct array", () => {
-  const action = removeTaskAC("2", "todolistId2");
+  const action = tasksActions.removeTask({ taskId: "2", todolistId: "todolistId2" });
 
   const endState = tasksReducer(startState, action);
 
@@ -113,7 +106,7 @@ test("correct task should be added to correct array", () => {
     order: 0,
     addedDate: "",
   };
-  const action = addTaskAC(task);
+  const action = tasksActions.addTask({ task: task });
 
   const endState = tasksReducer(startState, action);
 
@@ -136,15 +129,27 @@ test("status of specified task should be changed", () => {
     order: 0,
     addedDate: "",
   };
-  const action = updateTaskAC("2", task, "todolistId2");
+  const action = tasksActions.updateTask({ taskId: "2", model: task, todolistId: "todolistId2" });
 
   const endState = tasksReducer(startState, action);
 
-  expect(endState["todolistId1"][1].status).toBe(2);
-  expect(endState["todolistId2"][1].status).toBe(2);
+  expect(endState["todolistId1"][1].status).toBe(TaskStatuses.Completed);
+  expect(endState["todolistId2"][1].status).toBe(TaskStatuses.New);
 });
 test("title of specified task should be changed", () => {
-  const action = changeTaskTitleAC("2", "yogurt", "todolistId2");
+  const task = {
+    description: "",
+    title: "yogurt",
+    status: 0,
+    priority: 0,
+    startDate: "",
+    deadline: "",
+    id: "1",
+    todoListId: "todolistId2",
+    order: 0,
+    addedDate: "",
+  };
+  const action = tasksActions.updateTask({ taskId: "2", model: task, todolistId: "todolistId2" });
 
   const endState = tasksReducer(startState, action);
 
@@ -153,18 +158,19 @@ test("title of specified task should be changed", () => {
   expect(endState["todolistId2"][0].title).toBe("bread");
 });
 test("new array should be added when new todolist is added", () => {
-  const tolist: TodolistTypeAPI = {
-    id: "todolistId1",
-    addedDate: new Date(),
-    order: 0,
-    title: "new todolist",
-  };
-  const action = todolistsAction.addTodolist({ todolist: tolist });
+  const action = todolistsAction.addTodolist({
+    todolist: {
+      id: "someId",
+      addedDate: "",
+      order: 0,
+      title: "new todolist",
+    },
+  });
 
   const endState = tasksReducer(startState, action);
 
   const keys = Object.keys(endState);
-  const newKey = keys.find((k) => k != "todolistId1" && k != "todolistId2");
+  const newKey = keys.find((k) => k !== "todolistId1" && k !== "todolistId2");
   if (!newKey) {
     throw Error("new key should be added");
   }
@@ -181,4 +187,25 @@ test("propertry with todolistId should be deleted", () => {
 
   expect(keys.length).toBe(1);
   expect(endState["todolistId2"]).not.toBeDefined();
+});
+test("empty arrays should be add when we set todolist", () => {
+  const action = todolistsAction.setTodoList({
+    todolist: [
+      { id: "1", title: "newTitle", order: 0, addedDate: "" },
+      { id: "2", title: "newTitle", order: 0, addedDate: "" },
+    ],
+  });
+  const endState = tasksReducer({}, action);
+  const key = Object.keys(endState);
+
+  expect(key.length).toBe(2);
+  expect(endState["1"]).toBeDefined();
+  expect(endState["2"]).toBeDefined();
+});
+test("task should be add to todolist", () => {
+  const action = tasksActions.setTask({ tasks: startState["todolistId1"], todolistId: "todolistId1" });
+  const endeState = tasksReducer({ todolistId2: [], todolistId1: [] }, action);
+
+  expect(endeState["todolistId1"].length).toBe(3);
+  expect(endeState["todolistId2"].length).toBe(0);
 });

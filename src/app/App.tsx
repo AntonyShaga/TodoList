@@ -16,11 +16,12 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { TodolistsList } from "features/TodolistsList/TodolistsList";
 import { logOutTC, meTC } from "features/Login/auth-reducer";
 import CircularProgress from "@mui/material/CircularProgress";
+import { selectIsLogetIn } from "features/auth/auth.selectors";
 
 export function App() {
   const status = useAppSellector<RequestStatusType>((state) => state.app.status);
   const isInitialized = useAppSellector<boolean>((state) => state.app.isInitialized);
-  const isLoggetIn = useAppSellector((state) => state.auth.isLoggedIn);
+  const isLoggetIn = useAppSellector(selectIsLogetIn);
   const dispatch = useAppDispatch();
 
   const logOut = () => {

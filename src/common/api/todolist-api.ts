@@ -86,7 +86,7 @@ export const taskAPI = {
 
 export type TodolistTypeAPI = {
   id: string;
-  addedDate: Date;
+  addedDate: string;
   order: number;
   title: string;
 };
