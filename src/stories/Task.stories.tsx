@@ -1,41 +1,51 @@
-import type {Meta, StoryObj} from '@storybook/react';
-import {action} from '@storybook/addon-actions'
-import React, {useState} from "react";
-import {Task} from "../features/TodolistsList/Todolist/Task/Task";
-
+import type { Meta, StoryObj } from "@storybook/react";
+import { action } from "@storybook/addon-actions";
+import React, { useState } from "react";
+import { Task } from "../features/TodolistsList/Todolist/Task/Task";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta: Meta<typeof Task> = {
-    title: 'TODOLISTS/Task',
-    component: Task,
-    parameters: {
-        // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-        layout: 'centered',
+  title: "TODOLISTS/Task",
+  component: Task,
+  parameters: {
+    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
+    layout: "centered",
+  },
+  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
+  tags: ["autodocs"],
+  // More on argTypes: https://storybook.js.org/docs/api/argtypes
+  argTypes: {
+    removeTask: {
+      description: "removeTask",
+      action: "clicked",
     },
-    // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
-    tags: ['autodocs'],
-    // More on argTypes: https://storybook.js.org/docs/api/argtypes
-    argTypes: {
-        removeTask: {
-            description:'removeTask',
-            action: 'clicked',
-        },
-        changeTaskStatus: {
-            description:'changeTaskStatus',
-            action: 'clicked'
-        },
-        changeTaskTitle: {
-            description:'changeTaskTitle',
-            action: 'clicked'
-        },
+    changeTaskStatus: {
+      description: "changeTaskStatus",
+      action: "clicked",
     },
-    // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
-    args: {
-        task: {id:'1',title:'StoriBoock',status:0,addedDate:'', deadline:'',order:0,startDate:'',description:'',priority:0,todoListId:''},
-        /*removeTask: action('removeTask'),
+    changeTaskTitle: {
+      description: "changeTaskTitle",
+      action: "clicked",
+    },
+  },
+  // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
+  args: {
+    task: {
+      id: "1",
+      title: "StoriBoock",
+      status: 0,
+      addedDate: "",
+      deadline: "",
+      order: 0,
+      startDate: "",
+      description: "",
+      priority: 0,
+      todoListId: "",
+    },
+    /*removeTask: action('removeTask'),
         changeTaskStatus: action('changeTaskStatus'),
         changeTaskTitle: action('changeTaskTitle'),*/
-    },
+  },
 };
 
 export default meta;
@@ -43,8 +53,8 @@ type Story = StoryObj<typeof Task>;
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const TaskIsDoneStory: Story = {
-    //old version
-   /* args: {
+  //old version
+  /* args: {
         task: {id:'1',title:'StoriBoock',isDone:true},
         removeTask: action('removeTask'),
         changeTaskStatus: action('changeTaskStatus'),
@@ -52,22 +62,47 @@ export const TaskIsDoneStory: Story = {
     },*/
 };
 export const TaskIsNotDoneStory: Story = {
-    //old version
-    args: {
-        task: {id:'1',title:'StoriBoock',status:1,addedDate:'', deadline:'',order:0,startDate:'',description:'',priority:0,todoListId:''},
+  //old version
+  args: {
+    task: {
+      id: "1",
+      title: "StoriBoock",
+      status: 1,
+      addedDate: "",
+      deadline: "",
+      order: 0,
+      startDate: "",
+      description: "",
+      priority: 0,
+      todoListId: "",
     },
+  },
 };
 const TaskToogle = () => {
-    const [task,setTask] = useState({id:'1',title:'StoriBoock',status:1,addedDate:'', deadline:'',order:0,startDate:'',description:'',priority:0,todoListId:''})
+  const [task, setTask] = useState({
+    id: "1",
+    title: "StoriBoock",
+    status: 1,
+    addedDate: "",
+    deadline: "",
+    order: 0,
+    startDate: "",
+    description: "",
+    priority: 0,
+    todoListId: "",
+  });
 
-    return <Task
-        task={task}
-        todoListId={''}
-        removeTask={action('removeTask')}
-        changeTaskStatus={()=>setTask({...task,status: task.status})}
-        changeTaskTitle={(__,newTitle)=>setTask({...task,title:newTitle})}/>
-}
+  return (
+    <Task
+      task={task}
+      todoListId={""}
+      removeTask={action("removeTask")}
+      changeTaskStatus={() => setTask({ ...task, status: task.status })}
+      changeTaskTitle={(__, newTitle) => setTask({ ...task, title: newTitle })}
+    />
+  );
+};
 
-export const TaskStory:Story = {
-    render: () => <TaskToogle/>
-}
+export const TaskStory: Story = {
+  render: () => <TaskToogle />,
+};

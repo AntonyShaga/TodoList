@@ -1,25 +1,25 @@
-import {tasksReducer} from '../features/TodolistsList/tasks-reducer'
-import {todolistsReducer} from '../features/TodolistsList/todolists-reducer'
-import {AnyAction, applyMiddleware, combineReducers, legacy_createStore} from "redux";
-import {thunk, ThunkDispatch} from "redux-thunk";
-import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
-import {appReducer} from "./app-reducer";
-import {authReducer} from "../features/Login/auth-reducer";
+import { tasksReducer } from "../features/TodolistsList/tasks-reducer";
+import { todolistsReducer } from "features/TodolistsList/todolists-reducer";
+import { AnyAction, applyMiddleware, combineReducers, legacy_createStore } from "redux";
+import { thunk, ThunkAction, ThunkDispatch } from "redux-thunk";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { appReducer } from "./app-reducer";
+import { authReducer } from "features/Login/auth-reducer";
+import { configureStore } from "@reduxjs/toolkit";
 
 const rootReducer = combineReducers({
-    tasks: tasksReducer,
-    todolists: todolistsReducer,
-    app: appReducer,
-    auth:authReducer
-})
+  tasks: tasksReducer,
+  todolists: todolistsReducer,
+  app: appReducer,
+  auth: authReducer,
+});
 
-export const store = legacy_createStore(rootReducer, applyMiddleware(thunk))
+export const store = configureStore({ reducer: rootReducer });
 
-export type AppRootStateType = ReturnType<typeof rootReducer>
+export type AppRootStateType = ReturnType<typeof rootReducer>;
 
-type AppDispatchType = ThunkDispatch<AppRootStateType, unknown, AnyAction>
-export const useAppDispatch = useDispatch<AppDispatchType>
-export const useAppSellector:TypedUseSelectorHook<AppRootStateType> = useSelector
-// а это, чтобы можно было в консоли браузера обращаться к store в любой момент
-// @ts-ignore
-window.store = store
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, AnyAction>;
+
+type AppDispatchType = ThunkDispatch<AppRootStateType, unknown, AnyAction>;
+export const useAppDispatch = useDispatch<AppDispatchType>;
+export const useAppSellector: TypedUseSelectorHook<AppRootStateType> = useSelector;
