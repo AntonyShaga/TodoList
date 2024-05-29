@@ -13,9 +13,9 @@ import {
   todolistsAction,
 } from "./todolists-reducer";
 import { AddItemForm } from "common/components/AddItemForm/AddItemForm";
-import { addTaskTC, removeTaskTC, updateTaskTC } from "./tasks-reducer";
-import { TaskStatuses } from "common/api/todolist-api";
+import { removeTaskTC, tasksThunk } from "./tasks-reducer";
 import { Navigate } from "react-router-dom";
+import { TaskStatuses } from "common/enums/enums";
 
 export const TodolistsList: React.FC = () => {
   const todolists = useAppSellector<Array<TodolistDomainType>>((state) => state.todolists);
@@ -27,7 +27,7 @@ export const TodolistsList: React.FC = () => {
   }, []);
 
   const addTask = useCallback((todolistId: string, title: string) => {
-    dispatch(addTaskTC(todolistId, title));
+    dispatch(tasksThunk.addTask({ todolistId, title }));
   }, []);
 
   const removeTask = useCallback((todolistId: string, taskId: string) => {
@@ -35,11 +35,11 @@ export const TodolistsList: React.FC = () => {
   }, []);
 
   const changeStatus = useCallback((todolistId: string, status: TaskStatuses, taskId: string) => {
-    dispatch(updateTaskTC(todolistId, { status }, taskId));
+    dispatch(tasksThunk.updateTask({ todolistId, domainModel: { status }, taskId }));
   }, []);
 
   const changeTaskTitle = useCallback((todolistId: string, newTitle: string, taskId: string) => {
-    dispatch(updateTaskTC(todolistId, { title: newTitle }, taskId));
+    dispatch(tasksThunk.updateTask({ todolistId, domainModel: { title: newTitle }, taskId }));
   }, []);
 
   const removeTodolist = useCallback((todolistId: string) => {

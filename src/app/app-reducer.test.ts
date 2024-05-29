@@ -11,7 +11,7 @@ beforeEach(() => {
 });
 
 test("correct error message should be set", () => {
-  const endState = appReducer(startState, appActions.setAppEror({ error: "Some error" }));
+  const endState = appReducer(startState, appActions.setAppError({ error: "Some error" }));
   expect(endState.error).toBe("Some error");
 });
 

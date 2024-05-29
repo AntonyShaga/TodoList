@@ -1,9 +1,8 @@
-import { TaskTypeAPI, todolistAPI, TodolistTypeAPI } from "common/api/todolist-api";
-import { Dispatch } from "redux";
 import { appActions, RequestStatusType } from "app/app-reducer";
-import { handleServerAppError } from "common/utils/error-utils";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk } from "app/store";
+import { handleServerAppError } from "common/utils/handleServerAppError";
+import { todolistAPI, TodolistTypeAPI } from "features/TodolistsList/todolists.api";
 
 export type FilterValuesType = "all" | "active" | "completed";
 export type TodolistDomainType = TodolistTypeAPI & {
@@ -63,7 +62,7 @@ export const removeTodolistsTC =
         dispatch(appActions.setAppStatus({ status: "succeeded" }));
       })
       .catch((e) => {
-        dispatch(appActions.setAppEror({ error: e.message }));
+        dispatch(appActions.setAppError({ error: e.message }));
         dispatch(todolistsAction.setEntityStatus({ todolistId, entityStatus: "idle" }));
         dispatch(appActions.setAppStatus({ status: "succeeded" }));
       });

@@ -1,11 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { action } from "@storybook/addon-actions";
-import { AddItemForm, AddItemFormPropsType } from "../common/components/AddItemForm/AddItemForm";
-import React, { ChangeEvent, FC, KeyboardEvent, memo, useState } from "react";
-import TextField from "@mui/material/TextField/TextField";
-import IconButton from "@mui/material/IconButton/IconButton";
-import { AddBox } from "@mui/icons-material";
-import { EditableSpan } from "../common/components/EditableSpan/EditableSpan";
+import React from "react";
+import { EditableSpan } from "common/components/EditableSpan/EditableSpan";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta: Meta<typeof EditableSpan> = {

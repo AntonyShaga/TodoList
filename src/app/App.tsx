@@ -8,20 +8,21 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton/IconButton";
 import Button from "@mui/material/Button";
 import { Menu } from "@mui/icons-material";
-import { useAppDispatch, useAppSellector } from "./store";
-import { RequestStatusType } from "./app-reducer";
+import { useAppDispatch } from "./store";
 import { ErrorSnackbar } from "common/components/ErrorSnackbar/ErrorSnackbar";
-import { Login } from "features/Login/Login";
+import { Login } from "features/auth/ui/Login/Login";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { TodolistsList } from "features/TodolistsList/TodolistsList";
-import { logOutTC, meTC } from "features/Login/auth-reducer";
+import { logOutTC, meTC } from "features/auth/model/auth-reducer";
 import CircularProgress from "@mui/material/CircularProgress";
-import { selectIsLogetIn } from "features/auth/auth.selectors";
+import { selectIsLogetIn } from "features/auth/model/auth.selectors";
+import { useSelector } from "react-redux";
+import { selectAppStatus, selectIsInitialized } from "app/app-selectors";
 
 export function App() {
-  const status = useAppSellector<RequestStatusType>((state) => state.app.status);
-  const isInitialized = useAppSellector<boolean>((state) => state.app.isInitialized);
-  const isLoggetIn = useAppSellector(selectIsLogetIn);
+  const status = useSelector(selectAppStatus);
+  const isInitialized = useSelector(selectIsInitialized);
+  const isLoggetIn = useSelector(selectIsLogetIn);
   const dispatch = useAppDispatch();
 
   const logOut = () => {

@@ -9,20 +9,16 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useFormik } from "formik";
 import { useAppDispatch, useAppSellector } from "app/store";
-import { loginTC } from "./auth-reducer";
+import { loginTC } from "features/auth/model/auth-reducer";
 import { Navigate } from "react-router-dom";
-import { selectIsLogetIn } from "features/auth/auth.selectors";
+import { selectIsLogetIn } from "features/auth/model/auth.selectors";
 
 type FormikErrorType = {
   email?: string;
   password?: string;
   rememberMe?: boolean;
 };
-export type LoginDataType = {
-  email: string;
-  password: string;
-  rememberMe: boolean;
-};
+
 export const Login = () => {
   const dispatch = useAppDispatch();
   const isLoggetIn = useAppSellector(selectIsLogetIn);

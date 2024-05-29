@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
 import React, { useState } from "react";
-import { Task } from "../features/TodolistsList/Todolist/Task/Task";
+import { Task } from "features/TodolistsList/Todolist/Task/Task";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta: Meta<typeof Task> = {
