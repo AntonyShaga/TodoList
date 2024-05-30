@@ -12,10 +12,11 @@ import {
   TodolistDomainType,
   todolistsAction,
 } from "./todolists-reducer";
-import { AddItemForm } from "common/components/AddItemForm/AddItemForm";
-import { removeTaskTC, tasksThunk } from "./tasks-reducer";
+
+import { tasksThunk } from "./tasks-reducer";
 import { Navigate } from "react-router-dom";
 import { TaskStatuses } from "common/enums/enums";
+import { AddItemForm } from "common/components";
 
 export const TodolistsList: React.FC = () => {
   const todolists = useAppSellector<Array<TodolistDomainType>>((state) => state.todolists);
@@ -31,7 +32,7 @@ export const TodolistsList: React.FC = () => {
   }, []);
 
   const removeTask = useCallback((todolistId: string, taskId: string) => {
-    dispatch(removeTaskTC(todolistId, taskId));
+    dispatch(tasksThunk.removeTask({ todolistId, taskId }));
   }, []);
 
   const changeStatus = useCallback((todolistId: string, status: TaskStatuses, taskId: string) => {

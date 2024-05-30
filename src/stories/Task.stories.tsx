@@ -96,6 +96,7 @@ const TaskToogle = () => {
     <Task
       task={task}
       todoListId={""}
+      entityStatus={"loading"}
       removeTask={action("removeTask")}
       changeTaskStatus={() => setTask({ ...task, status: task.status })}
       changeTaskTitle={(__, newTitle) => setTask({ ...task, title: newTitle })}

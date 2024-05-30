@@ -3,6 +3,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk } from "app/store";
 import { handleServerAppError } from "common/utils/handleServerAppError";
 import { todolistAPI, TodolistTypeAPI } from "features/TodolistsList/todolists.api";
+import { tasksThunk } from "features/TodolistsList/tasks-reducer";
+import { clearTasksAndTodolists } from "common/actions";
 
 export type FilterValuesType = "all" | "active" | "completed";
 export type TodolistDomainType = TodolistTypeAPI & {
@@ -42,13 +44,27 @@ const slice = createSlice({
       state;
     },*/
   },
+  extraReducers: (builder) => {
+    builder.addCase(clearTasksAndTodolists, () => {
+      return [];
+    });
+  },
 });
 
 export const setTodolistsTC = (): AppThunk => (dispatch) => {
-  todolistAPI.getTodolists().then((res) => {
-    dispatch(todolistsAction.setTodoList({ todolist: res.data }));
-    dispatch(appActions.setAppStatus({ status: "succeeded" }));
-  });
+  dispatch(appActions.setAppStatus({ status: "loading" }));
+  todolistAPI
+    .getTodolists()
+    .then((res) => {
+      dispatch(todolistsAction.setTodoList({ todolist: res.data }));
+      dispatch(appActions.setAppStatus({ status: "succeeded" }));
+      return res.data;
+    })
+    .then((todos) => {
+      todos.forEach((el) => {
+        dispatch(tasksThunk.fetchTasks(el.id));
+      });
+    });
 };
 export const removeTodolistsTC =
   (todolistId: string): AppThunk =>

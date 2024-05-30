@@ -35,11 +35,6 @@ export const Todolist: React.FC<PropsType> = memo(
 
     let tasks = useAppSellector<TaskTypeAPI[]>((state) => state.tasks[id]);
 
-    const dispatch = useAppDispatch();
-    useEffect(() => {
-      dispatch(tasksThunk.fetchTasks(id));
-    }, []);
-
     const addTaskHandler = useCallback(
       (title: string) => {
         addTask(id, title);
@@ -68,7 +63,7 @@ export const Todolist: React.FC<PropsType> = memo(
     if (filter === "completed") {
       tasks = tasks.filter((t) => t.status === TaskStatuses.Completed);
     }
-
+    console.log(entityStatus);
     return (
       <div>
         <h3>
@@ -88,6 +83,7 @@ export const Todolist: React.FC<PropsType> = memo(
                 removeTask={removeTask}
                 changeTaskStatus={changeTaskStatus}
                 changeTaskTitle={changeTaskTitle}
+                entityStatus={entityStatus}
               />
             );
           })}

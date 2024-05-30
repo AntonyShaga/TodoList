@@ -6,6 +6,7 @@ import { AppThunk } from "app/store";
 import { handleServerAppError } from "common/utils";
 import { authAPI } from "features/auth/api/authApi";
 import { LoginDataType } from "features/auth/api/authApi.types";
+import { clearTasksAndTodolists } from "common/actions";
 
 const slice = createSlice({
   name: "auth",
@@ -45,7 +46,7 @@ export const logOutTC = (): AppThunk => async (dispatch) => {
     if (res.data.resultCode === 0) {
       dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }));
       dispatch(appActions.setAppStatus({ status: "succeeded" }));
-      //dispatch(todolistsAction.clearTodosData([]));
+      dispatch(clearTasksAndTodolists());
     } else {
       handleServerAppError(dispatch, res.data);
       dispatch(appActions.setAppStatus({ status: "failed" }));
