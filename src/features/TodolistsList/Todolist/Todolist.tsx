@@ -32,7 +32,10 @@ export const Todolist: React.FC<PropsType> = memo(
     changeFilter,
   }) => {
     const { id, filter, title, entityStatus } = todolist;
-
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+      dispatch(tasksThunk.fetchTasks(id));
+    }, []);
     let tasks = useAppSellector<TaskTypeAPI[]>((state) => state.tasks[id]);
 
     const addTaskHandler = useCallback(
@@ -63,7 +66,6 @@ export const Todolist: React.FC<PropsType> = memo(
     if (filter === "completed") {
       tasks = tasks.filter((t) => t.status === TaskStatuses.Completed);
     }
-    console.log(entityStatus);
     return (
       <div>
         <h3>

@@ -35,7 +35,6 @@ export const Task: FC<TaskPropsType> = memo(
       },
       [changeTaskTitle, id, todoListId],
     );
-    console.log(entityStatus);
     return (
       <div key={id} className={status === TaskStatuses.Completed ? "is-done" : ""}>
         <Checkbox checked={status === TaskStatuses.Completed} color="primary" onChange={changeTaskStatusHandler} />

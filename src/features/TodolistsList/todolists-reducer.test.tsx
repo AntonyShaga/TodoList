@@ -1,4 +1,10 @@
-import { FilterValuesType, TodolistDomainType, todolistsAction, todolistsReducer } from "./todolists-reducer";
+import {
+  FilterValuesType,
+  TodolistDomainType,
+  todolistsAction,
+  todolistsReducer,
+  todolistThunk,
+} from "./todolists-reducer";
 import { v1 } from "uuid";
 
 import { RequestStatusType } from "app/app-reducer";
@@ -18,7 +24,10 @@ beforeEach(() => {
 });
 
 test("correct todolist should be removed", () => {
-  const endState = todolistsReducer(startState, todolistsAction.removeTodolists({ todolistId: todolistId1 }));
+  const endState = todolistsReducer(
+    startState,
+    todolistThunk.removeTodolist.fulfilled({ todolistId: todolistId1 }, "", ""),
+  );
 
   expect(endState.length).toBe(1);
   expect(endState[0].id).toBe(todolistId2);
@@ -31,7 +40,10 @@ test("correct todolist should be added", () => {
     order: 0,
     title: "New Todolist",
   };
-  const endState = todolistsReducer(startState, todolistsAction.addTodolist({ todolist: tolist }));
+  const endState = todolistsReducer(
+    startState,
+    todolistThunk.addTodolist.fulfilled({ todolist: tolist }, "", "New Todolist"),
+  );
 
   expect(endState.length).toBe(3);
   expect(endState[0].title).toBe(tolist.title);
@@ -41,7 +53,14 @@ test("correct todolist should be added", () => {
 test("correct todolist should change its name", () => {
   let newTodolistTitle = "New Todolist";
 
-  const action = todolistsAction.changeTodolistTitle({ todolistId: todolistId2, title: newTodolistTitle });
+  const action = todolistThunk.changeTodolistTitle.fulfilled(
+    {
+      todolistId: todolistId2,
+      title: newTodolistTitle,
+    },
+    "",
+    { todolistId: todolistId2, title: newTodolistTitle },
+  );
 
   const endState = todolistsReducer(startState, action);
 
@@ -61,7 +80,7 @@ test("correct filter of todolist should be changed", () => {
 });
 
 test("todolist should be added", () => {
-  const action = todolistsAction.setTodoList({ todolist: startState });
+  const action = todolistThunk.fetchTodolist.fulfilled({ todolist: startState }, "");
   const endState = todolistsReducer([], action);
 
   expect(endState.length).toBe(2);
