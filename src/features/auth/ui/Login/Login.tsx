@@ -9,9 +9,9 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useFormik } from "formik";
 import { useAppDispatch, useAppSellector } from "app/store";
-import { loginTC } from "features/auth/model/auth-reducer";
 import { Navigate } from "react-router-dom";
 import { selectIsLogetIn } from "features/auth/model/auth.selectors";
+import { authThunk } from "features/auth/model/auth-reducer";
 
 type FormikErrorType = {
   email?: string;
@@ -46,7 +46,7 @@ export const Login = () => {
     onSubmit: async (values, _) => {
       // alert(JSON.stringify(values))
       _.setSubmitting(true);
-      await dispatch(loginTC(values));
+      await dispatch(authThunk.login(values));
       _.setSubmitting(false);
       formik.resetForm();
     },

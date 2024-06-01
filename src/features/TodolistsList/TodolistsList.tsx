@@ -4,7 +4,6 @@ import Paper from "@mui/material/Paper";
 import { Todolist } from "./Todolist/Todolist";
 import { useAppDispatch, useAppSellector } from "app/store";
 import { FilterValuesType, TodolistDomainType, todolistsAction, todolistThunk } from "./todolists-reducer";
-
 import { tasksThunk } from "./tasks-reducer";
 import { Navigate } from "react-router-dom";
 import { TaskStatuses } from "common/enums/enums";

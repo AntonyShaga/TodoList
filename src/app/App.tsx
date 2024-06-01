@@ -13,11 +13,11 @@ import { ErrorSnackbar } from "common/components/ErrorSnackbar/ErrorSnackbar";
 import { Login } from "features/auth/ui/Login/Login";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { TodolistsList } from "features/TodolistsList/TodolistsList";
-import { logOutTC, meTC } from "features/auth/model/auth-reducer";
 import CircularProgress from "@mui/material/CircularProgress";
 import { selectIsLogetIn } from "features/auth/model/auth.selectors";
 import { useSelector } from "react-redux";
 import { selectAppStatus, selectIsInitialized } from "app/app-selectors";
+import { authThunk } from "features/auth/model/auth-reducer";
 
 export function App() {
   const status = useSelector(selectAppStatus);
@@ -26,11 +26,11 @@ export function App() {
   const dispatch = useAppDispatch();
 
   const logOut = () => {
-    dispatch(logOutTC());
+    dispatch(authThunk.logOut());
   };
 
   useEffect(() => {
-    dispatch(meTC());
+    dispatch(authThunk.initializeApp());
   }, []);
 
   if (!isInitialized) {
