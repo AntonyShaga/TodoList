@@ -18,25 +18,26 @@ export const TodolistsList: React.FC = () => {
   const isLoggetIn = useSelector(selectIsLogetIn);
   const dispatch = useAppDispatch();
   const { fetchTodolist, removeTodolist, addTodolist, changeTodolistTitle } = useActions(todolistThunk);
+  const { removeTask, addTask, updateTask } = useActions(tasksThunk);
   useEffect(() => {
     if (!isLoggetIn) return;
     fetchTodolist();
   }, []);
 
-  const addTask = useCallback((todolistId: string, title: string) => {
-    dispatch(tasksThunk.addTask({ todolistId, title }));
+  const addTaskCallback = useCallback((todolistId: string, title: string) => {
+    addTask({ todolistId, title });
   }, []);
 
-  const removeTask = useCallback((todolistId: string, taskId: string) => {
-    dispatch(tasksThunk.removeTask({ todolistId, taskId }));
+  const removeTaskCallback = useCallback((todolistId: string, taskId: string) => {
+    removeTask({ todolistId, taskId });
   }, []);
 
   const changeStatus = useCallback((todolistId: string, status: TaskStatuses, taskId: string) => {
-    dispatch(tasksThunk.updateTask({ todolistId, domainModel: { status }, taskId }));
+    updateTask({ todolistId, domainModel: { status }, taskId });
   }, []);
 
   const changeTaskTitle = useCallback((todolistId: string, newTitle: string, taskId: string) => {
-    dispatch(tasksThunk.updateTask({ todolistId, domainModel: { title: newTitle }, taskId }));
+    updateTask({ todolistId, domainModel: { title: newTitle }, taskId });
   }, []);
 
   const removeTodolistCallback = useCallback((todolistId: string) => {
@@ -73,8 +74,8 @@ export const TodolistsList: React.FC = () => {
                   removeTodolist={removeTodolistCallback}
                   changeTodolistTitle={changeTodolistTitleCallback}
                   changeFilter={changeFilter}
-                  addTask={addTask}
-                  removeTask={removeTask}
+                  addTask={addTaskCallback}
+                  removeTask={removeTaskCallback}
                   changeTaskStatus={changeStatus}
                   changeTaskTitle={changeTaskTitle}
                 />

@@ -13,7 +13,6 @@ import { selectIsLogetIn } from "features/auth/model/auth.selectors";
 import { authThunk } from "features/auth/model/auth-reducer";
 import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { useAppSellector } from "app/store";
-import { LoginDataType } from "features/auth/api/authApi.types";
 import { BaseResponseType } from "common/types";
 
 type FormikErrorType = {
@@ -39,22 +38,22 @@ export const Login = () => {
       password: "",
       rememberMe: false,
     },
-    /*  validate: (values) => {
-      //const errors: FormikErrorType = {};
+    validate: (values) => {
+      const errors: FormikErrorType = {};
       if (!values.email) {
         return { email: "Required" };
-      } /!*else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
         errors.email = "Invalid email address";
-      }*!/
+      }
       if (!values.password) {
         return { password: "Required" };
-      } /!*else if (values.password.length < 4) {
+      } else if (values.password.length < 4) {
         errors.password = "Must be more five symbols";
       }
-      return errors;*!/
-    },*/
+      return errors;
+    },
     onSubmit: async (values, FormikHelpers: FormikHelpers<FormikValues>) => {
-      //FormikHelpers.setSubmitting(true);
+      FormikHelpers.setSubmitting(true);
       await dispatch(authThunk.login(values))
         .unwrap()
         .then((res) => {})
@@ -63,7 +62,7 @@ export const Login = () => {
             FormikHelpers.setFieldError(fieldsError.field, fieldsError.error);
           });
         });
-      //FormikHelpers.setSubmitting(false);
+      FormikHelpers.setSubmitting(false);
       //formik.resetForm();
     },
   });

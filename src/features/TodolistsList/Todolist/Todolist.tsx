@@ -3,14 +3,14 @@ import IconButton from "@mui/material/IconButton/IconButton";
 import { Delete } from "@mui/icons-material";
 import { FilterValuesType, TodolistDomainType } from "../todolists-reducer";
 import { Task } from "./Task/Task";
-
 import { TaskType } from "features/TodolistsList/todolists.api";
 import { TaskStatuses } from "common/enums/enums";
 import { AddItemForm, ButtonMemo, EditableSpan } from "common/components";
 import { useAppDispatch } from "common/hooks/useAppDispatch";
-import { useAppSellector } from "app/store";
 import { tasksThunk } from "features/TodolistsList/tasks-reducer";
 import { useActions } from "common/hooks/useActions";
+import { useSelector } from "react-redux";
+import { selectTasks } from "features/TodolistsList/tasks.selectors";
 
 type PropsType = {
   todolist: TodolistDomainType;
@@ -35,12 +35,12 @@ export const Todolist: React.FC<PropsType> = memo(
     changeFilter,
   }) => {
     const { id, filter, title, entityStatus } = todolist;
-    const {} = useActions(tasksThunk);
+    const { fetchTasks } = useActions(tasksThunk);
     const dispatch = useAppDispatch();
     useEffect(() => {
-      dispatch(tasksThunk.fetchTasks(id));
+      fetchTasks(id);
     }, []);
-    let tasks = useAppSellector<TaskType[]>((state) => state.tasks[id]);
+    let tasks = useSelector(selectTasks);
 
     const addTaskHandler = useCallback(
       (title: string) => {
@@ -64,11 +64,13 @@ export const Todolist: React.FC<PropsType> = memo(
     const onActiveClickHandler = useCallback(() => changeFilter(id, "active"), [changeFilter, id]);
     const onCompletedClickHandler = useCallback(() => changeFilter(id, "completed"), [changeFilter, id]);
 
+    let task: TaskType[] = tasks[id];
+
     if (filter === "active") {
-      tasks = tasks.filter((t) => t.status === TaskStatuses.New);
+      task = task.filter((t) => t.status === TaskStatuses.New);
     }
     if (filter === "completed") {
-      tasks = tasks.filter((t) => t.status === TaskStatuses.Completed);
+      task = task.filter((t) => t.status === TaskStatuses.Completed);
     }
     return (
       <div>
@@ -80,7 +82,7 @@ export const Todolist: React.FC<PropsType> = memo(
         </h3>
         <AddItemForm disabled={entityStatus == "loading"} addItem={addTaskHandler} />
         <div>
-          {tasks.map((t) => {
+          {task.map((t) => {
             return (
               <Task
                 key={t.id}

@@ -105,7 +105,7 @@ const changeTodolistTitle = createAppAsyncThunk<
   return thunkTryCatch(thunkAPI, async () => {
     dispatch(appActions.setAppStatus({ status: "loading" }));
     const res = await todolistAPI.updateTodolist(arg.todolistId, arg.title);
-    if (res.data.resultCode === 0) {
+    if (res.data.resultCode === ResultCode.Success) {
       dispatch(appActions.setAppStatus({ status: "succeeded" }));
       return arg;
     } else {
