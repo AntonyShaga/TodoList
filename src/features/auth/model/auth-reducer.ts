@@ -1,5 +1,3 @@
-import { appActions } from "app/app-reducer";
-import { handleServerNetworkError } from "common/utils/handleServerNetworkError";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createAppAsyncThunk, handleServerAppError } from "common/utils";
 import { authAPI } from "features/auth/api/authApi";
