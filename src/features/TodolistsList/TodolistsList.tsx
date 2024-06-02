@@ -2,16 +2,19 @@ import React, { useCallback, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { Todolist } from "./Todolist/Todolist";
-import { useAppDispatch, useAppSellector } from "app/store";
-import { FilterValuesType, TodolistDomainType, todolistsAction, todolistThunk } from "./todolists-reducer";
+import { FilterValuesType, todolistsAction, todolistThunk } from "./todolists-reducer";
 import { tasksThunk } from "./tasks-reducer";
 import { Navigate } from "react-router-dom";
 import { TaskStatuses } from "common/enums/enums";
 import { AddItemForm } from "common/components";
+import { useAppDispatch } from "common/hooks/useAppDispatch";
+import { selectTodolists } from "features/TodolistsList/todolists.selectors";
+import { useSelector } from "react-redux";
+import { selectIsLogetIn } from "features/auth/model/auth.selectors";
 
 export const TodolistsList: React.FC = () => {
-  const todolists = useAppSellector<Array<TodolistDomainType>>((state) => state.todolists);
-  const isLoggetIn = useAppSellector((state) => state.auth.isLoggedIn);
+  const todolists = useSelector(selectTodolists);
+  const isLoggetIn = useSelector(selectIsLogetIn);
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (!isLoggetIn) return;

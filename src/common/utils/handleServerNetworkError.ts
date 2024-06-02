@@ -1,8 +1,8 @@
 import axios from "axios";
 import { appActions } from "app/app-reducer";
-import { AppDispatchType } from "app/store";
+import { AppDispatch } from "app/store";
 
-export const handleServerNetworkError = (dispatch: AppDispatchType, err: unknown): void => {
+export const handleServerNetworkError = (dispatch: AppDispatch, err: unknown): void => {
   let errorMessage = "Some error occurred";
 
   // ❗Проверка на наличие axios ошибки

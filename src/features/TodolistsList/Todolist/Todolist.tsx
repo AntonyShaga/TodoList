@@ -1,13 +1,16 @@
 import React, { memo, useCallback, useEffect } from "react";
 import IconButton from "@mui/material/IconButton/IconButton";
 import { Delete } from "@mui/icons-material";
-import { useAppDispatch, useAppSellector } from "app/store";
 import { FilterValuesType, TodolistDomainType } from "../todolists-reducer";
 import { Task } from "./Task/Task";
-import { tasksThunk } from "features/TodolistsList/tasks-reducer";
-import { TaskTypeAPI } from "features/TodolistsList/todolists.api";
+
+import { TaskType } from "features/TodolistsList/todolists.api";
 import { TaskStatuses } from "common/enums/enums";
 import { AddItemForm, ButtonMemo, EditableSpan } from "common/components";
+import { useAppDispatch } from "common/hooks/useAppDispatch";
+import { useAppSellector } from "app/store";
+import { tasksThunk } from "features/TodolistsList/tasks-reducer";
+import { useActions } from "common/hooks/useActions";
 
 type PropsType = {
   todolist: TodolistDomainType;
@@ -32,11 +35,12 @@ export const Todolist: React.FC<PropsType> = memo(
     changeFilter,
   }) => {
     const { id, filter, title, entityStatus } = todolist;
+    const {} = useActions(tasksThunk);
     const dispatch = useAppDispatch();
     useEffect(() => {
       dispatch(tasksThunk.fetchTasks(id));
     }, []);
-    let tasks = useAppSellector<TaskTypeAPI[]>((state) => state.tasks[id]);
+    let tasks = useAppSellector<TaskType[]>((state) => state.tasks[id]);
 
     const addTaskHandler = useCallback(
       (title: string) => {
@@ -76,7 +80,7 @@ export const Todolist: React.FC<PropsType> = memo(
         </h3>
         <AddItemForm disabled={entityStatus == "loading"} addItem={addTaskHandler} />
         <div>
-          {tasks?.map((t) => {
+          {tasks.map((t) => {
             return (
               <Task
                 key={t.id}

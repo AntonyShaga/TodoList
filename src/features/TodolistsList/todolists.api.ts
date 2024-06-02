@@ -1,13 +1,13 @@
 import { AxiosResponse } from "axios";
 import { instance } from "common/api/instance";
-import { ResponseType } from "common/types/commonTypes";
+import { BaseResponseType } from "common/types/commonTypes";
 import { TaskPriorities, TaskStatuses } from "common/enums/enums";
 
 export const todolistAPI = {
   updateTodolist(todolistId: string, title: string) {
     return instance.put<
       null,
-      AxiosResponse<ResponseType<{ item: TodolistTypeAPI }>>,
+      AxiosResponse<BaseResponseType<{ item: TodolistTypeAPI }>>,
       {
         title: string;
       }
@@ -19,24 +19,24 @@ export const todolistAPI = {
   createTodolist(title: string) {
     return instance.post<
       null,
-      AxiosResponse<ResponseType<{ item: TodolistTypeAPI }>>,
+      AxiosResponse<BaseResponseType<{ item: TodolistTypeAPI }>>,
       {
         title: string;
       }
     >(`todo-lists/`, { title });
   },
   deleteTodolist(todolistId: string) {
-    return instance.delete<ResponseType>(`todo-lists/${todolistId}`);
+    return instance.delete<BaseResponseType>(`todo-lists/${todolistId}`);
   },
 };
 
 export const taskAPI = {
   updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
     return instance.put<
-      ResponseType<{ item: TaskTypeAPI }>,
+      BaseResponseType<{ item: TaskType }>,
       AxiosResponse<
-        ResponseType<{
-          item: TaskTypeAPI;
+        BaseResponseType<{
+          item: TaskType;
         }>
       >,
       UpdateTaskModelType
@@ -47,8 +47,8 @@ export const taskAPI = {
   },
   createTask(todolistId: string, title: string) {
     return instance.post<
-      ResponseType<{ item: TaskTypeAPI }>,
-      AxiosResponse<ResponseType<{ item: TaskTypeAPI }>>,
+      BaseResponseType<{ item: TaskType }>,
+      AxiosResponse<BaseResponseType<{ item: TaskType }>>,
       {
         title: string;
       }
@@ -69,9 +69,9 @@ export type TodolistTypeAPI = {
 type GetTasksResponse = {
   error: string | null;
   totalCount: number;
-  items: TaskTypeAPI[];
+  items: TaskType[];
 };
-export type TaskTypeAPI = {
+export type TaskType = {
   description: string;
   title: string;
   status: TaskStatuses;

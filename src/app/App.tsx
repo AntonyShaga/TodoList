@@ -8,16 +8,16 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton/IconButton";
 import Button from "@mui/material/Button";
 import { Menu } from "@mui/icons-material";
-import { useAppDispatch } from "./store";
 import { ErrorSnackbar } from "common/components/ErrorSnackbar/ErrorSnackbar";
 import { Login } from "features/auth/ui/Login/Login";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { TodolistsList } from "features/TodolistsList/TodolistsList";
 import CircularProgress from "@mui/material/CircularProgress";
-import { selectIsLogetIn } from "features/auth/model/auth.selectors";
+import { selectIsInitialized, selectIsLogetIn } from "features/auth/model/auth.selectors";
 import { useSelector } from "react-redux";
-import { selectAppStatus, selectIsInitialized } from "app/app-selectors";
 import { authThunk } from "features/auth/model/auth-reducer";
+import { selectAppStatus } from "app/app-selectors";
+import { useAppDispatch } from "common/hooks/useAppDispatch";
 
 export function App() {
   const status = useSelector(selectAppStatus);

@@ -3,12 +3,12 @@ import { Checkbox } from "@mui/material";
 import { EditableSpan } from "common/components/EditableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton/IconButton";
 import { Delete } from "@mui/icons-material";
-import { TaskTypeAPI } from "features/TodolistsList/todolists.api";
+import { TaskType } from "features/TodolistsList/todolists.api";
 import { TaskStatuses } from "common/enums/enums";
 import { RequestStatusType } from "app/app-reducer";
 
 type TaskPropsType = {
-  task: TaskTypeAPI;
+  task: TaskType;
   todoListId: string;
   entityStatus: RequestStatusType;
   removeTask: (todolistId: string, title: string) => void;

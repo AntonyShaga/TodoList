@@ -7,16 +7,26 @@ import FormGroup from "@mui/material/FormGroup";
 import FormLabel from "@mui/material/FormLabel";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { useFormik } from "formik";
-import { useAppDispatch, useAppSellector } from "app/store";
+import { FormikHelpers, useFormik } from "formik";
 import { Navigate } from "react-router-dom";
 import { selectIsLogetIn } from "features/auth/model/auth.selectors";
 import { authThunk } from "features/auth/model/auth-reducer";
+import { useAppDispatch } from "common/hooks/useAppDispatch";
+import { useAppSellector } from "app/store";
+import { LoginDataType } from "features/auth/api/authApi.types";
+import { BaseResponseType } from "common/types";
 
 type FormikErrorType = {
   email?: string;
   password?: string;
   rememberMe?: boolean;
+  captcha?: string;
+};
+type FormikValues = {
+  email: string;
+  password: string;
+  rememberMe: boolean;
+  captcha?: string;
 };
 
 export const Login = () => {
@@ -29,26 +39,32 @@ export const Login = () => {
       password: "",
       rememberMe: false,
     },
-    validate: (values) => {
-      const errors: FormikErrorType = {};
+    /*  validate: (values) => {
+      //const errors: FormikErrorType = {};
       if (!values.email) {
-        errors.email = "Required";
-      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+        return { email: "Required" };
+      } /!*else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
         errors.email = "Invalid email address";
-      }
+      }*!/
       if (!values.password) {
-        errors.password = "Required";
-      } else if (values.password.length < 4) {
+        return { password: "Required" };
+      } /!*else if (values.password.length < 4) {
         errors.password = "Must be more five symbols";
       }
-      return errors;
-    },
-    onSubmit: async (values, _) => {
-      // alert(JSON.stringify(values))
-      _.setSubmitting(true);
-      await dispatch(authThunk.login(values));
-      _.setSubmitting(false);
-      formik.resetForm();
+      return errors;*!/
+    },*/
+    onSubmit: async (values, FormikHelpers: FormikHelpers<FormikValues>) => {
+      //FormikHelpers.setSubmitting(true);
+      await dispatch(authThunk.login(values))
+        .unwrap()
+        .then((res) => {})
+        .catch((e: BaseResponseType) => {
+          e.fieldsErrors?.forEach((fieldsError) => {
+            FormikHelpers.setFieldError(fieldsError.field, fieldsError.error);
+          });
+        });
+      //FormikHelpers.setSubmitting(false);
+      //formik.resetForm();
     },
   });
   if (isLoggetIn) {

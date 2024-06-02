@@ -4,7 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { todolistsAction, todolistThunk } from "features/TodolistsList/todolists-reducer";
 import { createAppAsyncThunk } from "common/utils/create-app-async-thunk";
 import { handleServerAppError } from "common/utils/handleServerAppError";
-import { taskAPI, TaskTypeAPI, UpdateTaskModelType } from "features/TodolistsList/todolists.api";
+import { taskAPI, TaskType, UpdateTaskModelType } from "features/TodolistsList/todolists.api";
 import { ResultCode, TaskPriorities, TaskStatuses } from "common/enums/enums";
 import { clearTasksAndTodolists } from "common/actions";
 
@@ -24,7 +24,7 @@ export type UpdateTaskArgType = {
 };
 
 export type TasksStateType = {
-  [key: string]: Array<TaskTypeAPI>;
+  [key: string]: Array<TaskType>;
 };
 
 const slice = createSlice({
@@ -63,7 +63,7 @@ const slice = createSlice({
       });
   },
 });
-const fetchTasks = createAppAsyncThunk<{ todolistId: string; tasks: TaskTypeAPI[] }, string>(
+const fetchTasks = createAppAsyncThunk<{ todolistId: string; tasks: TaskType[] }, string>(
   `${slice.name}/fetchTasks`,
   async (todolistId, thunkAPI) => {
     const { dispatch, rejectWithValue } = thunkAPI;
@@ -80,7 +80,7 @@ const fetchTasks = createAppAsyncThunk<{ todolistId: string; tasks: TaskTypeAPI[
 );
 
 const addTask = createAppAsyncThunk<
-  { task: TaskTypeAPI },
+  { task: TaskType },
   {
     todolistId: string;
     title: string;
@@ -94,7 +94,7 @@ const addTask = createAppAsyncThunk<
       dispatch(appActions.setAppStatus({ status: "succeeded" }));
       return { task: res.data.data.item };
     } else {
-      handleServerAppError<{ item: TaskTypeAPI }>(dispatch, res.data);
+      handleServerAppError<{ item: TaskType }>(dispatch, res.data);
       return rejectWithValue(null);
     }
   } catch (e) {
@@ -129,7 +129,7 @@ const updateTask = createAppAsyncThunk<UpdateTaskArgType, UpdateTaskArgType>(
         dispatch(appActions.setAppStatus({ status: "succeeded" }));
         return arg;
       } else {
-        handleServerAppError<{ item: TaskTypeAPI }>(dispatch, res.data);
+        handleServerAppError<{ item: TaskType }>(dispatch, res.data);
         return rejectWithValue(null);
       }
     } catch (e) {
