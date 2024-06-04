@@ -1,7 +1,6 @@
 import { appActions } from "app/app-reducer";
-import { handleServerNetworkError } from "common/utils/handleServerNetworkError";
 import { createSlice } from "@reduxjs/toolkit";
-import { todolistsAction, todolistThunk } from "features/TodolistsList/todolists-reducer";
+import { todolistThunk } from "features/TodolistsList/todolists-reducer";
 import { createAppAsyncThunk } from "common/utils/create-app-async-thunk";
 import { handleServerAppError } from "common/utils/handleServerAppError";
 import { taskAPI, TaskType, UpdateTaskModelType } from "features/TodolistsList/todolists.api";
@@ -24,9 +23,7 @@ export type UpdateTaskArgType = {
   todolistId: string;
 };
 
-export type TasksStateType = {
-  [key: string]: Array<TaskType>;
-};
+export type TasksStateType = Record<string, TaskType[]>;
 
 const slice = createSlice({
   name: "tasks",

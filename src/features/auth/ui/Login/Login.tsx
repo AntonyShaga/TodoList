@@ -14,19 +14,10 @@ import { authThunk } from "features/auth/model/auth-reducer";
 import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { useAppSellector } from "app/store";
 import { BaseResponseType } from "common/types";
+import { LoginDataType } from "features/auth/api/authApi.types";
 
-type FormikErrorType = {
-  email?: string;
-  password?: string;
-  rememberMe?: boolean;
-  captcha?: string;
-};
-type FormikValues = {
-  email: string;
-  password: string;
-  rememberMe: boolean;
-  captcha?: string;
-};
+type FormikErrorType = Partial<LoginDataType>;
+type FormikValues = Omit<LoginDataType, "captcha">;
 
 export const Login = () => {
   const dispatch = useAppDispatch();
