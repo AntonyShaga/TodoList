@@ -15,48 +15,11 @@ import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { useAppSellector } from "app/store";
 import { BaseResponseType } from "common/types";
 import { LoginDataType } from "features/auth/api/authApi.types";
-
-type FormikErrorType = Partial<LoginDataType>;
-type FormikValues = Omit<LoginDataType, "captcha">;
+import { useLogin } from "features/auth/lib/useLogin";
 
 export const Login = () => {
-  const dispatch = useAppDispatch();
   const isLoggetIn = useAppSellector(selectIsLogetIn);
-
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-      rememberMe: false,
-    },
-    validate: (values) => {
-      const errors: FormikErrorType = {};
-      if (!values.email) {
-        return { email: "Required" };
-      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-        errors.email = "Invalid email address";
-      }
-      if (!values.password) {
-        return { password: "Required" };
-      } else if (values.password.length < 4) {
-        errors.password = "Must be more five symbols";
-      }
-      return errors;
-    },
-    onSubmit: async (values, FormikHelpers: FormikHelpers<FormikValues>) => {
-      FormikHelpers.setSubmitting(true);
-      await dispatch(authThunk.login(values))
-        .unwrap()
-        .then((res) => {})
-        .catch((e: BaseResponseType) => {
-          e.fieldsErrors?.forEach((fieldsError) => {
-            FormikHelpers.setFieldError(fieldsError.field, fieldsError.error);
-          });
-        });
-      FormikHelpers.setSubmitting(false);
-      //formik.resetForm();
-    },
-  });
+  const formik = useLogin();
   if (isLoggetIn) {
     return <Navigate to={"/"} />;
   }
@@ -82,9 +45,9 @@ export const Login = () => {
                 margin="normal"
                 error={!!(formik.touched.email && formik.errors.email)}
                 /*name='email'
-                                onChange={formik.handleChange}
-                                value={formik.values.email}
-                                onBlur={formik.handleBlur}*/
+                                                onChange={formik.handleChange}
+                                                value={formik.values.email}
+                                                onBlur={formik.handleBlur}*/
                 //helperText={formik.errors.email}
                 {...formik.getFieldProps("email")}
               />
@@ -95,9 +58,9 @@ export const Login = () => {
                 margin="normal"
                 error={!!(formik.touched.password && formik.errors.password)}
                 /*name='password'
-                                onChange={formik.handleChange}
-                                value={formik.values.password}
-                                onBlur={formik.handleBlur}*/
+                                                onChange={formik.handleChange}
+                                                value={formik.values.password}
+                                                onBlur={formik.handleBlur}*/
                 //helperText={formik.errors.password}
                 {...formik.getFieldProps("password")}
               />
