@@ -11,7 +11,7 @@ import { Menu } from "@mui/icons-material";
 import { ErrorSnackbar } from "common/components/ErrorSnackbar/ErrorSnackbar";
 import { Login } from "features/auth/ui/Login/Login";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { TodolistsList } from "features/TodolistsList/TodolistsList";
+import { TodolistsList } from "features/TodolistsList/ui/TodolistsList";
 import CircularProgress from "@mui/material/CircularProgress";
 import { selectIsInitialized, selectIsLogetIn } from "features/auth/model/auth.selectors";
 import { useSelector } from "react-redux";

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
 import React, { useState } from "react";
-import { Task } from "features/TodolistsList/Todolist/Task/Task";
+import { Task } from "features/TodolistsList/ui/Todolist/Task/Task";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta: Meta<typeof Task> = {
@@ -15,7 +15,7 @@ const meta: Meta<typeof Task> = {
   tags: ["autodocs"],
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {
-    removeTask: {
+    /* removeTask: {
       description: "removeTask",
       action: "clicked",
     },
@@ -26,7 +26,7 @@ const meta: Meta<typeof Task> = {
     changeTaskTitle: {
       description: "changeTaskTitle",
       action: "clicked",
-    },
+    },*/
   },
   // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   args: {
@@ -95,11 +95,11 @@ const TaskToogle = () => {
   return (
     <Task
       task={task}
-      todoListId={""}
+      todolistId={""}
       entityStatus={"loading"}
-      removeTask={action("removeTask")}
+      /*removeTask={action("removeTask")}
       changeTaskStatus={() => setTask({ ...task, status: task.status })}
-      changeTaskTitle={(__, newTitle) => setTask({ ...task, title: newTitle })}
+      changeTaskTitle={(__, newTitle) => setTask({ ...task, title: newTitle })}*/
     />
   );
 };

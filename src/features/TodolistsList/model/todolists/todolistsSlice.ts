@@ -1,13 +1,15 @@
 import { appActions, RequestStatusType } from "app/app-reducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { handleServerAppError } from "common/utils/handleServerAppError";
-import { todolistAPI, TodolistTypeAPI } from "features/TodolistsList/todolists.api";
 import { clearTasksAndTodolists } from "common/actions";
 import { createAppAsyncThunk } from "common/utils";
 import { ResultCode } from "common/enums/enums";
 import { thunkTryCatch } from "common/utils/thunk-try-catch";
+import { TodolistTypeAPI } from "features/TodolistsList/api/todolists/todolists.api.types";
+import { todolistAPI } from "features/TodolistsList/api/todolists/todolists.api";
 
 export type FilterValuesType = "all" | "active" | "completed";
+
 export type TodolistDomainType = TodolistTypeAPI & {
   filter: FilterValuesType;
   entityStatus: RequestStatusType;

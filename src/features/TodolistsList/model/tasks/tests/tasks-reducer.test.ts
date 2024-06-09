@@ -1,5 +1,5 @@
-import { tasksActions, tasksReducer, TasksStateType, tasksThunk } from "./tasks-reducer";
-import { todolistsAction, todolistThunk } from "./todolists-reducer";
+import { tasksActions, tasksReducer, TasksStateType, tasksThunk } from "features/TodolistsList/model/tasks/tasksSlice";
+import { todolistsAction, todolistThunk } from "features/TodolistsList/model/todolists/todolistsSlice";
 import { TaskPriorities, TaskStatuses } from "common/enums/enums";
 
 let startState: TasksStateType = {};
