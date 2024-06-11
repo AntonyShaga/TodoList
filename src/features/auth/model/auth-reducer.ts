@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf, isFulfilled, PayloadAction } from "@reduxjs/toolkit";
 import { createAppAsyncThunk, handleServerAppError } from "common/utils";
 import { authAPI } from "features/auth/api/authApi";
 import { LoginDataType } from "features/auth/api/authApi.types";
@@ -18,16 +18,12 @@ const slice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(authThunk.login.fulfilled, (state, action) => {
+    builder.addMatcher(
+      isAnyOf(authThunk.login.fulfilled, authThunk.logOut.fulfilled, authThunk.initializeApp.fulfilled),
+      (state, action) => {
         state.isLoggedIn = action.payload.isLoggedIn;
-      })
-      .addCase(authThunk.logOut.fulfilled, (state, action) => {
-        state.isLoggedIn = action.payload.isLoggedIn;
-      })
-      .addCase(authThunk.initializeApp.fulfilled, (state, action) => {
-        state.isLoggedIn = action.payload.isLoggedIn;
-      });
+      },
+    );
   },
 });
 

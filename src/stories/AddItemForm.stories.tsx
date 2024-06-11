@@ -34,8 +34,8 @@ type Story = StoryObj<typeof AddItemForm>;
 export const AddItemFormStory: Story = {
   //old version
   /*args: {
-       // addItem: action('Clicked button inside form')
-    },*/
+         // addItem: action('Clicked button inside form')
+      },*/
 };
 
 const ErrorAddItemForm: FC<AddItemFormPropsType> = memo(({ addItem }) => {
@@ -44,8 +44,9 @@ const ErrorAddItemForm: FC<AddItemFormPropsType> = memo(({ addItem }) => {
 
   const addItemHandler = () => {
     if (title.trim() !== "") {
-      addItem(title);
-      setTitle("");
+      addItem(title).then(() => {
+        setTitle("");
+      });
     } else {
       setError("Title is required");
     }
@@ -80,5 +81,16 @@ const ErrorAddItemForm: FC<AddItemFormPropsType> = memo(({ addItem }) => {
   );
 });
 export const ErrorAddItemFormStory: Story = {
-  render: () => <ErrorAddItemForm addItem={action("Clicked button inside form")} />,
+  render: () => (
+    <ErrorAddItemForm
+      addItem={(title: string): Promise<unknown> => {
+        action("Clicked button inside form"); // Logs the action
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve("Promise Resolved Value");
+          }, 1000);
+        });
+      }}
+    />
+  ),
 };

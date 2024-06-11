@@ -1,12 +1,11 @@
 import React, { memo, useCallback, useEffect } from "react";
-import IconButton from "@mui/material/IconButton/IconButton";
-import { Delete } from "@mui/icons-material";
-import { TodolistDomainType, todolistThunk } from "features/TodolistsList/model/todolists/todolistsSlice";
-import { AddItemForm, EditableSpan } from "common/components";
+import { TodolistDomainType } from "features/TodolistsList/model/todolists/todolistsSlice";
+import { AddItemForm } from "common/components";
 import { tasksThunk } from "features/TodolistsList/model/tasks/tasksSlice";
 import { useActions } from "common/hooks/useActions";
 import { FilterTasksButtons } from "features/TodolistsList/ui/Todolist/FilterTasksButtons/FilterTasksButtons";
 import { Tasks } from "features/TodolistsList/ui/Todolist/Tasks/Tasks";
+import { TodolistTitle } from "features/TodolistsList/ui/Todolist/TodolistTitle/TodolistTitle";
 
 type Props = {
   todolist: TodolistDomainType;
@@ -15,7 +14,6 @@ type Props = {
 export const Todolist = memo(({ todolist }: Props) => {
   const { id, filter, title, entityStatus } = todolist;
   const { fetchTasks, addTask } = useActions(tasksThunk);
-  const { removeTodolist, changeTodolistTitle } = useActions(todolistThunk);
 
   useEffect(() => {
     fetchTasks(id);
@@ -23,26 +21,14 @@ export const Todolist = memo(({ todolist }: Props) => {
 
   const addTaskCallback = useCallback(
     (title: string) => {
-      addTask({ todolistId: id, title });
+      return addTask({ todolistId: id, title }).unwrap();
     },
     [id],
   );
-  const removeTodolistHandler = () => {
-    removeTodolist(id);
-  };
-
-  const changeTodolistTitleHandler = (title: string) => {
-    changeTodolistTitle({ todolistId: id, title });
-  };
 
   return (
     <div>
-      <h3>
-        <EditableSpan value={title} onChange={changeTodolistTitleHandler} />
-        <IconButton onClick={removeTodolistHandler} disabled={entityStatus === "loading"}>
-          <Delete />
-        </IconButton>
-      </h3>
+      <TodolistTitle todolist={todolist} />
       <AddItemForm disabled={entityStatus == "loading"} addItem={addTaskCallback} />
       <div>
         <Tasks todolist={todolist} />

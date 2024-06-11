@@ -57,26 +57,21 @@ const slice = createSlice({
 const fetchTodolist = createAppAsyncThunk<{ todolist: TodolistTypeAPI[] }, void>(
   `${slice.name}/fetchTodolist`,
   async (_, thunkAPI) => {
-    return thunkTryCatch(thunkAPI, async () => {
-      const res = await todolistAPI.getTodolists();
-      return { todolist: res.data };
-    });
+    const res = await todolistAPI.getTodolists();
+    return { todolist: res.data };
   },
 );
 
 const addTodolist = createAppAsyncThunk<{ todolist: TodolistTypeAPI }, string>(
   `${slice.name}/addTodolists`,
   async (title, thunkAPI) => {
-    const { dispatch, rejectWithValue } = thunkAPI;
-    return thunkTryCatch(thunkAPI, async () => {
-      const res = await todolistAPI.createTodolist(title);
-      if (res.data.resultCode === ResultCode.Success) {
-        return { todolist: res.data.data.item };
-      } else {
-        handleServerAppError<{ item: TodolistTypeAPI }>(dispatch, res.data);
-        return rejectWithValue(null);
-      }
-    });
+    const { rejectWithValue } = thunkAPI;
+    const res = await todolistAPI.createTodolist(title);
+    if (res.data.resultCode === ResultCode.Success) {
+      return { todolist: res.data.data.item };
+    } else {
+      return rejectWithValue(res.data);
+    }
   },
 );
 

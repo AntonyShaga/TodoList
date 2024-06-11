@@ -1,5 +1,5 @@
 import { instance } from "common/api/instance";
-import { AxiosResponse } from "axios/index";
+import { AxiosResponse } from "axios";
 import { BaseResponseType } from "common/types";
 import { TodolistTypeAPI } from "features/TodolistsList/api/todolists/todolists.api.types";
 

@@ -2,9 +2,10 @@ import IconButton from "@mui/material/IconButton/IconButton";
 import TextField from "@mui/material/TextField/TextField";
 import React, { ChangeEvent, FC, KeyboardEvent, memo, useState } from "react";
 import { AddBox } from "@mui/icons-material";
+import { BaseResponseType } from "common/types";
 
 export type AddItemFormPropsType = {
-  addItem: (title: string) => void;
+  addItem: (title: string) => Promise<unknown>;
   disabled?: boolean;
 };
 
@@ -14,8 +15,13 @@ export const AddItemForm: FC<AddItemFormPropsType> = memo(({ addItem, disabled }
 
   const addItemHandler = () => {
     if (title.trim() !== "") {
-      addItem(title);
-      setTitle("");
+      addItem(title)
+        .then(() => {
+          setTitle("");
+        })
+        .catch((e: BaseResponseType) => {
+          setError(e.messages[0]);
+        });
     } else {
       setError("Title is required");
     }

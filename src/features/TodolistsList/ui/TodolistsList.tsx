@@ -22,7 +22,7 @@ export const TodolistsList: React.FC = () => {
   }, []);
 
   const addTodolistCallback = useCallback((title: string) => {
-    addTodolist(title);
+    return addTodolist(title).unwrap();
   }, []);
 
   if (!isLoggetIn) {

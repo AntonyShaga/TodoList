@@ -70,8 +70,8 @@ const addTask = createAppAsyncThunk<
     if (res.data.resultCode === ResultCode.Success) {
       return { task: res.data.data.item };
     } else {
-      handleServerAppError<{ item: TaskType }>(dispatch, res.data);
-      return rejectWithValue(null);
+      handleServerAppError<{ item: TaskType }>(dispatch, res.data, false);
+      return rejectWithValue(res.data);
     }
   });
 });
