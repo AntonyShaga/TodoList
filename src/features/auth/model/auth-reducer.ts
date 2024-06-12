@@ -18,12 +18,16 @@ const slice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(
-      isAnyOf(authThunk.login.fulfilled, authThunk.logOut.fulfilled, authThunk.initializeApp.fulfilled),
-      (state, action) => {
-        state.isLoggedIn = action.payload.isLoggedIn;
-      },
-    );
+    builder
+      .addMatcher(
+        isAnyOf(authThunk.login.fulfilled, authThunk.logOut.fulfilled, authThunk.initializeApp.fulfilled),
+        (state, action) => {
+          state.isLoggedIn = action.payload.isLoggedIn;
+        },
+      )
+      .addMatcher(isAnyOf(authThunk.initializeApp.fulfilled, authThunk.initializeApp.rejected), (state, action) => {
+        state.isInitialized = true;
+      });
   },
 });
 
@@ -31,45 +35,35 @@ const login = createAppAsyncThunk<{ isLoggedIn: boolean }, LoginDataType>(
   `${slice.name}/login`,
   async (data, thunkAPI) => {
     const { dispatch, rejectWithValue } = thunkAPI;
-    return thunkTryCatch(thunkAPI, async () => {
-      const res = await authAPI.login(data);
-      if (res.data.resultCode === ResultCode.Success) {
-        return { isLoggedIn: true };
-      } else {
-        const isShowAppError = !res.data.fieldsErrors.length;
-        handleServerAppError(dispatch, res.data, isShowAppError);
-        return rejectWithValue(res.data);
-      }
-    });
+    const res = await authAPI.login(data);
+    if (res.data.resultCode === ResultCode.Success) {
+      return { isLoggedIn: true };
+    } else {
+      const isShowAppError = !res.data.fieldsErrors.length;
+      return rejectWithValue(res.data);
+    }
   },
 );
 
 const logOut = createAppAsyncThunk<{ isLoggedIn: boolean }, void>(`${slice.name}/logOut`, async (_, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI;
-  return thunkTryCatch(thunkAPI, async () => {
-    const res = await authAPI.logout();
-    if (res.data.resultCode === ResultCode.Success) {
-      dispatch(clearTasksAndTodolists());
-      return { isLoggedIn: false };
-    } else {
-      handleServerAppError(dispatch, res.data);
-      return rejectWithValue(null);
-    }
-  });
+  const res = await authAPI.logout();
+  if (res.data.resultCode === ResultCode.Success) {
+    dispatch(clearTasksAndTodolists());
+    return { isLoggedIn: false };
+  } else {
+    return rejectWithValue(res.data);
+  }
 });
 
 const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }, void>(`${slice.name}/me`, async (_, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI;
-  return thunkTryCatch(thunkAPI, async () => {
-    const res = await authAPI.me();
-    if (res.data.resultCode === ResultCode.Success) {
-      return { isLoggedIn: true };
-    } else {
-      return rejectWithValue(null);
-    }
-  }).finally(() => {
-    dispatch(authActions.setAppIsInitialized({ isInitialized: true }));
-  });
+  const res = await authAPI.me();
+  if (res.data.resultCode === ResultCode.Success) {
+    return { isLoggedIn: true };
+  } else {
+    return rejectWithValue(res.data);
+  }
 });
 
 export const authReducer = slice.reducer;

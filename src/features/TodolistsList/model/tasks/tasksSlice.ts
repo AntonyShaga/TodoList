@@ -2,7 +2,6 @@ import { appActions } from "app/app-reducer";
 import { createSlice } from "@reduxjs/toolkit";
 import { todolistThunk } from "features/TodolistsList/model/todolists/todolistsSlice";
 import { createAppAsyncThunk } from "common/utils/create-app-async-thunk";
-import { handleServerAppError } from "common/utils/handleServerAppError";
 import { ResultCode } from "common/enums/enums";
 import { clearTasksAndTodolists } from "common/actions";
 import { thunkTryCatch } from "common/utils/thunk-try-catch";
@@ -65,45 +64,39 @@ const addTask = createAppAsyncThunk<
   }
 >(`${slice.name}/addTask`, async (arg, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI;
-  return thunkTryCatch(thunkAPI, async () => {
-    const res = await taskAPI.createTask(arg.todolistId, arg.title);
-    if (res.data.resultCode === ResultCode.Success) {
-      return { task: res.data.data.item };
-    } else {
-      handleServerAppError<{ item: TaskType }>(dispatch, res.data, false);
-      return rejectWithValue(res.data);
-    }
-  });
+  const res = await taskAPI.createTask(arg.todolistId, arg.title);
+  if (res.data.resultCode === ResultCode.Success) {
+    return { task: res.data.data.item };
+  } else {
+    return rejectWithValue(res.data);
+  }
 });
 
 const updateTask = createAppAsyncThunk<UpdateTaskArgType, UpdateTaskArgType>(
   `${slice.name}/updateTask`,
   async (arg, thunkAPI) => {
     const { dispatch, rejectWithValue, getState } = thunkAPI;
-    return thunkTryCatch(thunkAPI, async () => {
-      const rotState = getState();
-      const task = rotState.tasks[arg.todolistId].find((el) => el.id === arg.taskId);
-      if (!task) {
-        dispatch(appActions.setAppError({ error: "Task not found in the state" }));
-        return rejectWithValue(null);
-      }
-      const apiModel: UpdateTaskModelType = {
-        deadline: task.deadline,
-        description: task.description,
-        priority: task.priority,
-        startDate: task.startDate,
-        title: task.title,
-        status: task.status,
-        ...arg.domainModel,
-      };
-      const res = await taskAPI.updateTask(arg.todolistId, arg.taskId, apiModel);
-      if (res.data.resultCode === ResultCode.Success) {
-        return arg;
-      } else {
-        handleServerAppError<{ item: TaskType }>(dispatch, res.data);
-        return rejectWithValue(null);
-      }
-    });
+    const rotState = getState();
+    const task = rotState.tasks[arg.todolistId].find((el) => el.id === arg.taskId);
+    if (!task) {
+      dispatch(appActions.setAppError({ error: "Task not found in the state" }));
+      return rejectWithValue(null);
+    }
+    const apiModel: UpdateTaskModelType = {
+      deadline: task.deadline,
+      description: task.description,
+      priority: task.priority,
+      startDate: task.startDate,
+      title: task.title,
+      status: task.status,
+      ...arg.domainModel,
+    };
+    const res = await taskAPI.updateTask(arg.todolistId, arg.taskId, apiModel);
+    if (res.data.resultCode === ResultCode.Success) {
+      return arg;
+    } else {
+      return rejectWithValue(res.data);
+    }
   },
 );
 

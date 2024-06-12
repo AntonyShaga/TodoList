@@ -20,7 +20,9 @@ export const AddItemForm: FC<AddItemFormPropsType> = memo(({ addItem, disabled }
           setTitle("");
         })
         .catch((e: BaseResponseType) => {
-          setError(e.messages[0]);
+          if (e?.resultCode) {
+            setError(e.messages[0]);
+          }
         });
     } else {
       setError("Title is required");
