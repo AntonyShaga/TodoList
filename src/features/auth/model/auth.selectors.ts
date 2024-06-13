@@ -1,5 +1,5 @@
-import { AppRootStateType } from "app/store";
+import { AppRootState } from "app/store";
 
-export const selectIsLogetIn = (state: AppRootStateType) => state.auth.isLoggedIn;
-export const selectCaptcha = (state: AppRootStateType) => state.auth.captcha;
-export const selectIsInitialized = (state: AppRootStateType) => state.auth.isInitialized;
+export const selectIsLogetIn = (state: AppRootState) => state.auth.isLoggedIn;
+export const selectCaptcha = (state: AppRootState) => state.auth.captcha;
+export const selectIsInitialized = (state: AppRootState) => state.auth.isInitialized;

@@ -16,10 +16,10 @@ export const store = configureStore({
   },
 });
 
-export type AppRootStateType = ReturnType<typeof store.getState>;
+export type AppRootState = ReturnType<typeof store.getState>;
 
 //export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, AnyAction>;
 //export type AppDispatch = typeof store.dispatch;
-export type AppDispatch = ThunkDispatch<AppRootStateType, unknown, AnyAction>;
+export type AppDispatch = ThunkDispatch<AppRootState, unknown, AnyAction>;
 
-export const useAppSellector: TypedUseSelectorHook<AppRootStateType> = useSelector;
+export const useAppSellector: TypedUseSelectorHook<AppRootState> = useSelector;
