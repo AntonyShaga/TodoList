@@ -1,15 +1,18 @@
 import { instance } from "common/api/instance";
-import { BaseResponseType } from "common/types/commonTypes";
+import { BaseResponse } from "common/types/commonTypes";
 import { LoginDataType, userType } from "features/auth/api/authApi.types";
 
 export const authAPI = {
   me() {
-    return instance.get<BaseResponseType<userType>>(`auth/me`);
+    return instance.get<BaseResponse<userType>>(`auth/me`);
   },
   login(data: LoginDataType) {
-    return instance.post<BaseResponseType<{ userId: number }>>(`/auth/login`, data);
+    return instance.post<BaseResponse<{ userId: number }>>(`/auth/login`, data);
   },
   logout() {
-    return instance.delete<BaseResponseType<{ userId: number }>>(`/auth/login`);
+    return instance.delete<BaseResponse<{ userId: number }>>(`/auth/login`);
+  },
+  captcha() {
+    return instance.get("security/get-captcha-url");
   },
 };

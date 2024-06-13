@@ -4,11 +4,10 @@ import { todolistThunk } from "features/TodolistsList/model/todolists/todolistsS
 import { createAppAsyncThunk } from "common/utils/create-app-async-thunk";
 import { ResultCode } from "common/enums/enums";
 import { clearTasksAndTodolists } from "common/actions";
-import { thunkTryCatch } from "common/utils/thunk-try-catch";
-import { TaskType, UpdateTaskArgType, UpdateTaskModelType } from "features/TodolistsList/api/tasks/tasks.api.types";
+import { Tasks, UpdateTaskArg, UpdateTaskModel } from "features/TodolistsList/api/tasks/tasks.api.types";
 import { taskAPI } from "features/TodolistsList/api/tasks/tasks.api";
 
-export type TasksStateType = Record<string, TaskType[]>;
+export type TasksStateType = Record<string, Tasks[]>;
 
 const slice = createSlice({
   name: "tasks",
@@ -46,18 +45,16 @@ const slice = createSlice({
       });
   },
 });
-const fetchTasks = createAppAsyncThunk<{ todolistId: string; tasks: TaskType[] }, string>(
+const fetchTasks = createAppAsyncThunk<{ todolistId: string; tasks: Tasks[] }, string>(
   `${slice.name}/fetchTasks`,
   async (todolistId, thunkAPI) => {
-    return thunkTryCatch(thunkAPI, async () => {
-      const res = await taskAPI.getTasks(todolistId);
-      return { todolistId, tasks: res.data.items };
-    });
+    const res = await taskAPI.getTasks(todolistId);
+    return { todolistId, tasks: res.data.items };
   },
 );
 
 const addTask = createAppAsyncThunk<
-  { task: TaskType },
+  { task: Tasks },
   {
     todolistId: string;
     title: string;
@@ -72,7 +69,7 @@ const addTask = createAppAsyncThunk<
   }
 });
 
-const updateTask = createAppAsyncThunk<UpdateTaskArgType, UpdateTaskArgType>(
+const updateTask = createAppAsyncThunk<UpdateTaskArg, UpdateTaskArg>(
   `${slice.name}/updateTask`,
   async (arg, thunkAPI) => {
     const { dispatch, rejectWithValue, getState } = thunkAPI;
@@ -82,7 +79,7 @@ const updateTask = createAppAsyncThunk<UpdateTaskArgType, UpdateTaskArgType>(
       dispatch(appActions.setAppError({ error: "Task not found in the state" }));
       return rejectWithValue(null);
     }
-    const apiModel: UpdateTaskModelType = {
+    const apiModel: UpdateTaskModel = {
       deadline: task.deadline,
       description: task.description,
       priority: task.priority,
@@ -103,10 +100,8 @@ const updateTask = createAppAsyncThunk<UpdateTaskArgType, UpdateTaskArgType>(
 const removeTask = createAppAsyncThunk<{ todolistId: string; taskId: string }, { todolistId: string; taskId: string }>(
   `${slice.name}/removeTask`,
   async (arg, thunkAPI) => {
-    return thunkTryCatch(thunkAPI, async () => {
-      const res = await taskAPI.deleteTask(arg.todolistId, arg.taskId);
-      return arg;
-    });
+    const res = await taskAPI.deleteTask(arg.todolistId, arg.taskId);
+    return arg;
   },
 );
 

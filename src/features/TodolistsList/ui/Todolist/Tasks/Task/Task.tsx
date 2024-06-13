@@ -5,13 +5,13 @@ import IconButton from "@mui/material/IconButton/IconButton";
 import { Delete } from "@mui/icons-material";
 import { TaskStatuses } from "common/enums/enums";
 import { RequestStatusType } from "app/app-reducer";
-import { TaskType } from "features/TodolistsList/api/tasks/tasks.api.types";
+import { Tasks } from "features/TodolistsList/api/tasks/tasks.api.types";
 import { useActions } from "common/hooks/useActions";
 import { tasksThunk } from "features/TodolistsList/model/tasks/tasksSlice";
 import s from "features/TodolistsList/ui/Todolist/Tasks/Task/Task.module.css";
 
 type Props = {
-  task: TaskType;
+  task: Tasks;
   todolistId: string;
   entityStatus: RequestStatusType;
 };

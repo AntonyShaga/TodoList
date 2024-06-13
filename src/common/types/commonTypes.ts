@@ -1,11 +1,11 @@
-export type FieldErrorType = {
+export type FieldError = {
   error: string;
   field: string;
 };
 
-export type BaseResponseType<T = {}> = {
+export type BaseResponse<T = {}> = {
   resultCode: number;
   messages: string[];
   data: T;
-  fieldsErrors: FieldErrorType[];
+  fieldsErrors: FieldError[];
 };

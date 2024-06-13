@@ -8,12 +8,14 @@ import FormLabel from "@mui/material/FormLabel";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Navigate } from "react-router-dom";
-import { selectIsLogetIn } from "features/auth/model/auth.selectors";
+import { selectCaptcha, selectIsLogetIn } from "features/auth/model/auth.selectors";
 import { useAppSellector } from "app/store";
 import { useLogin } from "features/auth/lib/useLogin";
 
 export const Login = () => {
   const isLoggetIn = useAppSellector(selectIsLogetIn);
+  const captcha = useAppSellector(selectCaptcha);
+  console.log(captcha);
   const { formik } = useLogin();
   if (isLoggetIn) {
     return <Navigate to={"/"} />;
@@ -39,11 +41,6 @@ export const Login = () => {
                 label="Email"
                 margin="normal"
                 error={!!(formik.touched.email && formik.errors.email)}
-                /*name='email'
-                                                onChange={formik.handleChange}
-                                                value={formik.values.email}
-                                                onBlur={formik.handleBlur}*/
-                //helperText={formik.errors.email}
                 {...formik.getFieldProps("email")}
               />
               {formik.touched.email && formik.errors.email && <div style={{ color: "red" }}>{formik.errors.email}</div>}
@@ -52,13 +49,17 @@ export const Login = () => {
                 label="Password"
                 margin="normal"
                 error={!!(formik.touched.password && formik.errors.password)}
-                /*name='password'
-                                                onChange={formik.handleChange}
-                                                value={formik.values.password}
-                                                onBlur={formik.handleBlur}*/
-                //helperText={formik.errors.password}
                 {...formik.getFieldProps("password")}
               />
+              {captcha && (
+                <TextField
+                  type="text"
+                  label="captcha"
+                  margin="normal"
+                  error={!!(formik.touched.password && formik.errors.password)}
+                  {...formik.getFieldProps("captcha")}
+                />
+              )}
               {formik.touched.password && formik.errors.password && (
                 <div style={{ color: "red" }}>{formik.errors.password}</div>
               )}
@@ -71,6 +72,7 @@ export const Login = () => {
               <Button disabled={formik.isSubmitting} type={"submit"} variant={"contained"} color={"primary"}>
                 Login
               </Button>
+              {captcha && <img src={captcha} />}
             </FormGroup>
           </form>
         </FormControl>

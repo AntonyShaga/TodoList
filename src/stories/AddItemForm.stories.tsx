@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
-import { AddItemForm, AddItemFormPropsType } from "common/components/AddItemForm/AddItemForm";
+import { AddItemForm } from "common/components/AddItemForm/AddItemForm";
 import React, { ChangeEvent, FC, KeyboardEvent, memo, useState } from "react";
 import TextField from "@mui/material/TextField/TextField";
 import IconButton from "@mui/material/IconButton/IconButton";
@@ -37,8 +37,12 @@ export const AddItemFormStory: Story = {
          // addItem: action('Clicked button inside form')
       },*/
 };
+export type Props = {
+  addItem: (title: string) => Promise<unknown>;
+  disabled?: boolean;
+};
 
-const ErrorAddItemForm: FC<AddItemFormPropsType> = memo(({ addItem }) => {
+const ErrorAddItemForm = memo(({ addItem }: Props) => {
   let [title, setTitle] = useState("");
   let [error, setError] = useState<string | null>("Title is required");
 

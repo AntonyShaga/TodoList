@@ -1,6 +1,6 @@
 import { TaskPriorities, TaskStatuses } from "common/enums";
 
-export type UpdateDomainTaskModelType = {
+export type UpdateDomainTaskModel = {
   title?: string;
   description?: string;
   status?: TaskStatuses;
@@ -8,18 +8,17 @@ export type UpdateDomainTaskModelType = {
   startDate?: string;
   deadline?: string;
 };
-
-export type UpdateTaskArgType = {
+export type UpdateTaskArg = {
   taskId: string;
-  domainModel: UpdateDomainTaskModelType;
+  domainModel: UpdateDomainTaskModel;
   todolistId: string;
 };
 export type GetTasksResponse = {
   error: string | null;
   totalCount: number;
-  items: TaskType[];
+  items: Tasks[];
 };
-export type TaskType = {
+export type Tasks = {
   description: string;
   title: string;
   status: TaskStatuses;
@@ -31,7 +30,7 @@ export type TaskType = {
   order: number;
   addedDate: string;
 };
-export type UpdateTaskModelType = {
+export type UpdateTaskModel = {
   title: string;
   description: string;
   status: TaskStatuses;

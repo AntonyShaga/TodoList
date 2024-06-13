@@ -1,18 +1,18 @@
 import { instance } from "common/api/instance";
-import { BaseResponseType } from "common/types";
-import { AxiosResponse } from "axios/index";
-import { GetTasksResponse, TaskType, UpdateTaskModelType } from "features/TodolistsList/api/tasks/tasks.api.types";
+import { BaseResponse } from "common/types";
+import { AxiosResponse } from "axios";
+import { GetTasksResponse, Tasks, UpdateTaskModel } from "features/TodolistsList/api/tasks/tasks.api.types";
 
 export const taskAPI = {
-  updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
+  updateTask(todolistId: string, taskId: string, model: UpdateTaskModel) {
     return instance.put<
-      BaseResponseType<{ item: TaskType }>,
+      BaseResponse<{ item: Tasks }>,
       AxiosResponse<
-        BaseResponseType<{
-          item: TaskType;
+        BaseResponse<{
+          item: Tasks;
         }>
       >,
-      UpdateTaskModelType
+      UpdateTaskModel
     >(`todo-lists/${todolistId}/tasks/${taskId}`, model);
   },
   getTasks(todolistId: string) {
@@ -20,8 +20,8 @@ export const taskAPI = {
   },
   createTask(todolistId: string, title: string) {
     return instance.post<
-      BaseResponseType<{ item: TaskType }>,
-      AxiosResponse<BaseResponseType<{ item: TaskType }>>,
+      BaseResponse<{ item: Tasks }>,
+      AxiosResponse<BaseResponse<{ item: Tasks }>>,
       {
         title: string;
       }

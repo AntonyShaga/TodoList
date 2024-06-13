@@ -2,14 +2,14 @@ import IconButton from "@mui/material/IconButton/IconButton";
 import TextField from "@mui/material/TextField/TextField";
 import React, { ChangeEvent, FC, KeyboardEvent, memo, useState } from "react";
 import { AddBox } from "@mui/icons-material";
-import { BaseResponseType } from "common/types";
+import { BaseResponse } from "common/types";
 
-export type AddItemFormPropsType = {
+export type Props = {
   addItem: (title: string) => Promise<unknown>;
   disabled?: boolean;
 };
 
-export const AddItemForm: FC<AddItemFormPropsType> = memo(({ addItem, disabled }) => {
+export const AddItemForm = memo(({ addItem, disabled }: Props) => {
   let [title, setTitle] = useState("");
   let [error, setError] = useState<string | null>(null);
 
@@ -19,7 +19,7 @@ export const AddItemForm: FC<AddItemFormPropsType> = memo(({ addItem, disabled }
         .then(() => {
           setTitle("");
         })
-        .catch((e: BaseResponseType) => {
+        .catch((e: BaseResponse) => {
           if (e?.resultCode) {
             setError(e.messages[0]);
           }

@@ -1,18 +1,19 @@
 import { FormikHelpers, useFormik } from "formik";
 import { authThunk } from "features/auth/model/auth-reducer";
-import { BaseResponseType } from "common/types";
+import { BaseResponse } from "common/types";
 import { useActions } from "common/hooks/useActions";
 import { LoginDataType } from "features/auth/api/authApi.types";
 
 export const useLogin = () => {
   const { login } = useActions(authThunk);
   type FormikErrorType = Partial<LoginDataType>;
-  type FormikValues = Omit<LoginDataType, "captcha">;
+  type FormikValues = Required<LoginDataType>;
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
       rememberMe: false,
+      captcha: "",
     },
     validate: (values) => {
       const errors: FormikErrorType = {};
@@ -33,7 +34,7 @@ export const useLogin = () => {
       await login(values)
         .unwrap()
         .then((res) => {})
-        .catch((e: BaseResponseType) => {
+        .catch((e: BaseResponse) => {
           e.fieldsErrors?.forEach((fieldsError) => {
             FormikHelpers.setFieldError(fieldsError.field, fieldsError.error);
           });
