@@ -1,6 +1,5 @@
 {
   "name": "todolist",
-  "homepage": "https://AntonyShaga.github.io/TodoList",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -95,5 +94,6 @@
     "moduleNameMapper": {
       "^axios$": "axios/dist/node/axios.cjs"
     }
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }
